@@ -1,0 +1,253 @@
+---
+import { Image } from "astro:assets";
+import PNotes from "../components/PNotes.astro";
+import mcp from "../img/mcp-nobg.png";
+import wtf from "../img/wtf.jpeg";
+---
+
+<p-slide class="center" autoplay timing="550">
+  <h2 style="margin-block-end: 0.2em" class="main-gradient">
+    Let's talk about MCP
+  </h2>
+  <p-fragment
+    ><Image
+      src={mcp}
+      alt="mcp logo"
+      class="alter-image-size"
+      style="--image-start-size: 9em"
+    /></p-fragment
+  >
+</p-slide>
+<p-slide>
+  <ul style="line-height: 1.8em">
+    <li>
+      🐣 <span class="main-sub-gradient">Introduced in 2024 by Anthropic</span>
+    </li>
+    <p-fragment>
+      <li>
+        📋 <span class="main-sub-gradient">An open standard protocol</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🔌 <span class="main-sub-gradient"
+          >Connects AI apps to tools and data</span
+        >
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🔒 <span class="main-sub-gradient"
+          >Permission-based integration model</span
+        >
+      </li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      MCP stands for "Model Context Protocol". It is an open standard introduced
+      by Anthropic in November 2024 to standardize how AI applications connect
+      to external tools, data sources, and services.
+    </p>
+    <p>
+      The idea is similar to having a common interface: instead of building a
+      custom integration for every AI application and every external system,
+      developers can expose capabilities through MCP servers, while AI
+      applications act as MCP clients.
+    </p>
+    <p>
+      MCP does not automatically make every integration fully isolated or secure
+      by itself. Security depends on the host application, the client, the
+      server implementation, and the permissions granted by the user. However,
+      it gives developers a standard way to structure these integrations and
+      reason about the boundary between the AI application and external systems.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide class="center" autoplay timing="550">
+  <h1 class="main-gradient">Why MCP?</h1>
+  <p-fragment
+    ><Image
+      src={wtf}
+      alt="wtf image"
+      class="alter-image-size"
+      style="border-radius: 1em"
+    /></p-fragment
+  >
+</p-slide>
+<p-slide>
+  <ul style="line-height: 1.8em">
+    <li>
+      🌍 <span class="main-sub-gradient">AI apps need the outside world</span>
+    </li>
+    <p-fragment>
+      <li>
+        📁 <span class="main-sub-gradient"
+          >Files, APIs, databases, docs, CRMs...</span
+        >
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🧩 <span class="main-sub-gradient"
+          >Every system exposes data differently</span
+        >
+      </li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      AI applications are powerful, but they become much more useful when they
+      can interact with external systems: files, APIs, databases, repositories,
+      internal documentation, CRMs, and many other sources of information.
+    </p>
+
+    <p>
+      The problem is that each external system exposes data and actions in a
+      different way. Every API has its own structure, authentication model,
+      permissions, and data format.
+    </p>
+
+    <p>
+      This is the starting point: AI apps need context and actions from the real
+      world, but the real world is fragmented.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h2 class="main-gradient">The N x M problem</h2>
+
+  <ul style="line-height: 1.8em">
+    <li>
+      🤖 <span class="main-sub-gradient">N AI apps</span>
+    </li>
+    <p-fragment>
+      <li>
+        🔌 <span class="main-sub-gradient">M tools and data sources</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        📈 <span class="main-sub-gradient">N x M custom integrations</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🧯 <span class="main-sub-gradient">Complexity grows fast</span>
+      </li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      Without a shared protocol, each AI application has to build its own
+      integration with each external tool or data source.
+    </p>
+
+    <p>
+      If we have N AI applications and M tools, we quickly end up with an N by M
+      integration problem. The more apps and tools we add, the more custom
+      connections we have to build and maintain.
+    </p>
+
+    <p>This is expensive, repetitive, and hard to scale.</p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h2><span class="main-gradient">The deterministic problem</span> 🔢</h2>
+</p-slide>
+<p-slide>
+  <ul style="line-height: 1.8em">
+    <li>
+      🎲 <span class="main-sub-gradient">LLMs are probabilistic</span>
+    </li>
+    <p-fragment>
+      <li>
+        🧠 <span class="main-sub-gradient">They generate likely answers</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🧾 <span class="main-sub-gradient">Tools need precise inputs</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        ⚠️ <span class="main-sub-gradient">APIs expect deterministic calls</span
+        >
+      </li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      There is another important problem: AI models are probabilistic. They do
+      not execute code in the traditional sense, and they do not naturally
+      behave like deterministic software.
+    </p>
+
+    <p>
+      A model predicts the most likely next tokens based on the conversation and
+      its context. This is incredibly useful for language, reasoning, and
+      interpretation, but external systems usually need something much more
+      precise.
+    </p>
+
+    <p>
+      APIs, databases, file systems, and business tools expect deterministic
+      calls: specific parameters, predictable structures, clear permissions, and
+      well-defined execution boundaries.
+    </p>
+
+    <p>
+      MCP helps by creating a structured layer between the probabilistic world
+      of the model and the deterministic world of tools and systems.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide class="center">
+  <h2 class="main-gradient">The MCP solution</h2>
+</p-slide>
+<p-slide>
+  <ul style="line-height: 1.8em">
+    <li>
+      🔌 <span class="main-sub-gradient">Build the connection once</span>
+    </li>
+    <p-fragment>
+      <li>
+        🔁 <span class="main-sub-gradient">Reuse it across AI applications</span
+        >
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        📋 <span class="main-sub-gradient">Use a shared protocol</span>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        ✨ <span class="main-sub-gradient">The “USB-C for AI apps” idea</span>
+      </li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      The goal of MCP is to avoid rebuilding the same kind of integration again
+      and again.
+    </p>
+
+    <p>
+      A tool can expose its capabilities through an MCP server, and different AI
+      applications can connect to it through the same protocol.
+    </p>
+
+    <p>
+      This is why MCP is often described as a sort of USB-C for AI applications:
+      not because it removes all complexity, but because it introduces a shared
+      connector between AI apps and external systems.
+    </p>
+  </PNotes>
+</p-slide>

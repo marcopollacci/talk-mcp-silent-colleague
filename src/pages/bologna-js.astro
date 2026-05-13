@@ -4,6 +4,7 @@ import Layout from "../layouts/Layout.astro";
 import BolognaJsTalks from "../slides/bolognajs-talks.astro";
 import CoverBolognaJs from "../slides/cover-bologna-js.astro";
 import Cover from "../slides/cover.astro";
+import Intro from "../slides/intro.astro";
 import Thanks from "../slides/thanks.astro";
 const favIcon = favicon.src;
 const canRender = import.meta.env.DEV || new Date("2026-04-20") < new Date();
@@ -22,6 +23,7 @@ const metaData = {
       <>
         <Cover />
         <BolognaJsTalks />
+        <Intro />
         <Thanks />
       </>
     )

@@ -497,6 +497,25 @@ a {
   color: #484848;
 }
 
+.main-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--starting-point-gradient),
+    var(--ending-point-gradient)
+  );
+  background-clip: text;
+  font-family: var(--talk-marco-graphik-semibold);
+  -webkit-text-fill-color: transparent;
+}
+
+.text-sub-section,
+.main-sub-gradient {
+  background: linear-gradient(90deg, #ff00d8, #ff542f);
+  background-clip: text;
+  font-family: var(--talk-marco-graphik-semibold);
+  -webkit-text-fill-color: transparent;
+}
+
 .special-file {
   border-radius: 1em;
   border: 1px solid blue;
