@@ -1,0 +1,29 @@
+---
+import favicon from "../img/bolognajs_favicon.png";
+import Layout from "../layouts/Layout.astro";
+import BolognaJsTalks from "../slides/bolognajs-talks.astro";
+import CoverBolognaJs from "../slides/cover-bologna-js.astro";
+import Cover from "../slides/cover.astro";
+import Thanks from "../slides/thanks.astro";
+const favIcon = favicon.src;
+const canRender = import.meta.env.DEV || new Date("2026-04-20") < new Date();
+const metaData = {
+  title: "MCP: the silent colleague connecting your services to the AI",
+  description: "Talk di Marco Pollacci",
+  image: "og-image.png",
+  site: "https://talk-mcp-silent-colleague.marcotalk.dev/bologna-js/",
+};
+---
+
+<Layout {canRender} {favIcon} {metaData}>
+  <CoverBolognaJs />
+  {
+    canRender && (
+      <>
+        <Cover />
+        <BolognaJsTalks />
+        <Thanks />
+      </>
+    )
+  }
+</Layout>

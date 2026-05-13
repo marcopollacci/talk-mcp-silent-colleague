@@ -1,5 +1,5 @@
 {
-  "conventionalCommits.scopes": ["project"],
+  "conventionalCommits.scopes": ["project", "bolognajs"],
   "[astro]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

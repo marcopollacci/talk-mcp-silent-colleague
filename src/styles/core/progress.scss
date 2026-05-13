@@ -8,5 +8,10 @@
   height: 0.5rem;
   z-index: 150;
   --progress: 0;
-  background: linear-gradient(to right, var(--progress-color) 0%, var(--progress-color-two) var(--progress), transparent 0);
+  background: linear-gradient(
+    to right,
+    var(--starting-point-gradient) 0%,
+    var(--ending-point-gradient) var(--progress),
+    transparent 0
+  );
 }
