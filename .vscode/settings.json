@@ -6,5 +6,25 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#404040",
+    "activityBar.background": "#404040",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#000000",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#404040",
+    "statusBar.background": "#272727",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#404040",
+    "statusBarItem.remoteBackground": "#272727",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#272727",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#27272799",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#272727"
 }
