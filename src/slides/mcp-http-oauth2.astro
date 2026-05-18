@@ -1,0 +1,282 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="cover-internal-sub-section">
+  <h2>Authentication</h2>
+  <h3>OAuth 2.0 🔐</h3>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Why OAuth 2.0?</h3>
+  <ul>
+    <p-fragment
+      ><li>
+        🌐 Remote MCP servers are <span class="main-sub-gradient"
+          >publicly reachable</span
+        > — they need to verify who's calling
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🤖 Required by <span class="main-sub-gradient">claude.ai</span> and other
+        online clients to connect remote servers
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        📋 The MCP spec mandates <span class="main-sub-gradient">OAuth 2.1</span
+        > + PKCE for remote HTTP transport
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🏠 stdio doesn't need it — the host already controls the process
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      stdio is inherently trusted — the host spawns the process itself. But a
+      remote HTTP server is exposed to the network, so the MCP spec requires
+      OAuth 2.1 with PKCE to authenticate clients properly.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">
+    What is PKCE - Proof Key for Code Exchange?
+  </h3>
+  <ul>
+    <p-fragment>
+      <li>
+        🧪 Client creates a random <code>code_verifier</code>
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🧬 Sends only a hashed <code>code_challenge</code> during login
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>
+        🎫 Sends the original <code>code_verifier</code> when exchanging the code
+      </li>
+    </p-fragment>
+    <p-fragment>
+      <li>🛡️ Prevents stolen authorization codes from being reused</li>
+    </p-fragment>
+  </ul>
+
+  <PNotes>
+    <p>
+      PKCE is an extension to the OAuth Authorization Code flow. The client
+      starts by generating a random secret called code_verifier. Instead of
+      sending the secret directly, it sends a hashed version called
+      code_challenge.
+    </p>
+    <p>
+      Later, when the client exchanges the authorization code for an access
+      token, it must send the original code_verifier. The authorization server
+      hashes it again and checks that it matches the original challenge.
+    </p>
+    <p>
+      This means that stealing the authorization code is not enough to obtain an
+      access token. Without the original verifier, the token exchange fails.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">The OAuth flow</h3>
+  <ul>
+    <p-fragment
+      ><li>
+        🔍 <span class="main-sub-gradient">1. Discovery</span> — client discovers
+        the OAuth metadata
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        👤 <span class="main-sub-gradient">2. Authorization</span> — user logs in
+        and grants permission
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🎫 <span class="main-sub-gradient">3. Token exchange</span> — client gets
+        an access token
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        ✅ <span class="main-sub-gradient">4. Authenticated requests</span> — token
+        sent as <code>Authorization: Bearer</code>
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      The MCP client kicks off the flow automatically if the server returns 401.
+      Discovery tells the client where to redirect the user for login and where
+      to exchange the code for a token.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 style="margin-block-end: 1em;">
+    <span class="cover-internal-sub-section-all">Discovery endpoint</span> 🔍
+  </h3>
+  <pre
+    class="small-line"
+    data-label-file="/.well-known/oauth-authorization-server">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">
+    {
+        "issuer": "https://my-mcp-server.com",
+        "authorization_endpoint": "https://my-mcp-server.com/oauth/authorize",
+        "token_endpoint": "https://my-mcp-server.com/oauth/token",
+        "response_types_supported": ["code"],
+        "code_challenge_methods_supported": ["S256"]
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      This is the metadata document the MCP client fetches first. It tells the
+      client where to send the user for login and where to exchange the
+      authorization code for a token. S256 is the PKCE method required by the
+      spec.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 style="margin-block-end: 1em;">
+    <span class="cover-internal-sub-section-all">Validating the token</span> 🛡️
+  </h3>
+  <pre
+    class="small-line"
+    data-label-file="server.js">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">//...
+    import { betterAuth } from "better-auth";
+    import { bearer } from "better-auth/plugins";
+
+    const auth = betterAuth({
+    baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+    plugins: [bearer()],
+    socialProviders: {
+        github: {
+        clientId: process.env.GITHUB_ID,
+        clientSecret: process.env.GITHUB_SECRET,
+        },
+    },
+    });</code>
+  </pre>
+  <PNotes>
+    <p>
+      The bearer() plugin tells better-auth to accept Bearer tokens in the
+      Authorization header — exactly what the MCP client sends. No manual token
+      verification needed.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide follow-fragments>
+  <h3 style="margin-block-end: 1em;">
+    <span class="cover-internal-sub-section-all">Protecting the endpoint</span> 🔒
+  </h3>
+  <pre
+    class="small-line"
+    data-label-file="server.js">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">    const createServer = () => {
+    const server = new McpServer({
+        name: "my-mcp-http-oauth2-server",
+        version: "1.0.0",
+    });
+
+    server.tool(
+        "greet",
+        "Returns a greeting for the given name",
+        { name: z.string() },
+        async ({ name }) => ({
+        content: [{ type: "text", text: `Hello, ${name}!` }],
+        }),
+    );
+
+    return server;
+    };</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+
+    const app = express();
+    app.use(express.json());
+
+    app.post("/mcp", async (req, res) => {
+    </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">const session = await auth.api.getSession({ headers: req.headers });</code><code style="font-size: 1.3rem" is:raw class="language-javascript">
+
+    if (!session?.user) {
+        return res.status(401).json({ error: "unauthorized" });
+    }
+
+    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+    const server = createServer();
+    await server.connect(transport);
+    await transport.handleRequest(req, res, req.body);
+    });
+
+    app.listen(3000);
+    console.log("MCP HTTP OAuth2 server is running on http://localhost:3000/mcp");</code></p-fragment>
+  </pre>
+  <PNotes>
+    <p>
+      Just call getSession() and check if a user is there before handing off to
+      the MCP transport. If the session is missing, return 401 — the MCP client
+      will kick off the OAuth flow automatically.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h3>
+    <span class="cover-internal-sub-section-all"
+      >Don't build it from scratch</span
+    > 🙏
+  </h3>
+  <ul>
+    <p-fragment
+      ><li>
+        📦 <span class="main-sub-gradient">@auth/core</span> — framework-agnostic,
+        supports many providers
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        ⚡ <span class="main-sub-gradient">better-auth</span> — full-featured, built
+        for modern JS stacks
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        ☁️ <span class="main-sub-gradient">Clerk / Auth0</span> — hosted solutions,
+        zero infra to manage
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        👀 The MCP SDK will soon ship <span class="main-sub-gradient"
+          >built-in OAuth helpers</span
+        >
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      Implementing OAuth from scratch is error-prone. Use a battle-tested
+      library or a hosted provider. The MCP SDK team is also working on built-in
+      helpers to make this even simpler in the near future.
+    </p>
+  </PNotes>
+</p-slide>
+<style lang="scss">
+  ul {
+    p-fragment:not(:last-of-type) li {
+      margin-block-end: 1.5rem;
+    }
+  }
+</style>

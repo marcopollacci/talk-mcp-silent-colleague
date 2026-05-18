@@ -1,0 +1,102 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="cover-internal-sub-section">
+  <h2>HTTP</h2>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Project setup</h3>
+  <pre
+    class="small-line"
+    data-label-file="package.json">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">
+    {
+      "name": "http",
+      "type": "module",
+      "scripts": {
+        "start": "node server.js"
+      },
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.0.0",
+        "express": "^5.0.0",
+        "zod": "^3.0.0"
+      }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Same as stdio, plus Express to handle HTTP requests. The MCP SDK already
+      includes everything needed for Streamable HTTP transport.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide follow-fragments>
+  <h3 class="cover-internal-sub-section-all">Creating the server</h3>
+  <pre
+    class="small-line"
+    data-label-file="server.js">
+<code style="font-size: 1.1rem" is:raw class="language-javascript">
+    //...other imports
+    import express from "express";
+    const createServer = () => {
+        const server = new McpServer({
+            name: "my-mcp-http-server",
+            version: "1.0.0",
+        });
+
+        server.tool(
+            "greet",
+            "Returns a greeting for the given name",
+            { name: z.string() },
+            async ({ name }) => ({
+            content: [{ type: "text", text: `Hello, ${name}!` }],
+            }),
+        );
+        return server;
+    }</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+
+    const app = express();
+    app.use(express.json());
+
+    app.post("/mcp", async (req, res) => {
+     const transport = </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });</code>
+<code style="font-size: 1.3rem" is:raw class="language-javascript">     const server = createServer();
+     await server.connect(transport);
+     await transport.handleRequest(req, res, req.body);
+    });
+
+    app.listen(3000);</code></p-fragment></pre>
+  <PNotes>
+    <p>
+      The tool registration is identical to stdio — tools are
+      transport-agnostic. We expose a POST endpoint at /mcp and handle each
+      request with its own transport instance.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Connecting a client</h3>
+  <pre
+    class="small-line"
+    data-label-file="mcp.json">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">
+    {
+      "mcpServers": {
+        "my-http-mcp-server": {
+          "type": "http",
+          "url": "http://localhost:3000/mcp"
+        }
+      }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Instead of a command and a path, the client just needs a URL. The server
+      can run anywhere — locally, on a VPS, or on a cloud platform.
+    </p>
+  </PNotes>
+</p-slide>

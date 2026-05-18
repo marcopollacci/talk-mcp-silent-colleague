@@ -43,15 +43,13 @@ code[p-effect~="highlight"] {
       color-mix(
         in srgb,
         var(--ending-point-gradient, oklch(0.6 0.1 80deg)),
-        transparent var(--highlight-transparency, 50%)
+        transparent var(--highlight-transparency, 85%)
       )
     )
     0 / calc(100% * var(--fragment-progress)) auto no-repeat;
   filter: none;
   &[aria-hidden="false"] {
-    color: #fff;
-    span.token {
-      color: #fff;
-    }
+    margin: 0.25em;
+    border: 1px solid var(--ending-point-gradient);
   }
 }

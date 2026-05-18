@@ -1,0 +1,95 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="cover-internal">
+  <h1>Build from scratch</h1>
+</p-slide>
+<p-slide class="cover-internal-sub-section">
+  <h2>stdio</h2>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Project setup</h3>
+  <pre
+    class="small-line"
+    data-label-file="package.json">
+    <code style="font-size: 1.3rem" is:raw class="language-javascript">{
+        "name": "stdio",
+        "type": "module",
+        "scripts": {
+            "start": "node server.js"
+        },
+        "dependencies": {
+            "@modelcontextprotocol/sdk": "^1.0.0",
+            "zod": "^3.0.0"
+        }
+    }</code></pre>
+  <PNotes>
+    <p>
+      The only dependency we need is the official MCP SDK and Zod for schema
+      validation. We use ESM modules — "type": "module" is required.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide follow-fragments>
+  <h3 class="cover-internal-sub-section-all">Creating the server</h3>
+  <pre
+    class="small-line"
+    data-label-file="server.js">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">
+    import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+    import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+    import { z } from "zod";
+
+    const server = new McpServer({
+      name: "my-mcp-server",
+      version: "1.0.0",
+    });</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+    
+    server.tool(
+       "greet",
+       "Returns a greeting for the given name",
+       { name: z.string() },
+       async ({ name }) => ({
+           content: [{ type: "text", text: `Hello, ${name}!` }],
+       })
+    );
+
+    const transport = </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">new StdioServerTransport();</code>
+  
+  <code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript"> await server.connect(transport);
+</code></p-fragment>
+  </pre>
+  <PNotes>
+    <p>
+      First we instantiate McpServer with a name and version. Then we register a
+      tool: name, description, input schema via Zod, and an async handler that
+      returns the result as content.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Connecting a client</h3>
+  <pre
+    class="small-line"
+    data-label-file="mcp.json">
+<code style="font-size: 1.3rem" is:raw class="language-javascript">
+    {
+      "mcpServers": {
+        "my-stdio-mcp-server": {
+         "command": "node",
+         "args": [
+             "/path/to/server.js"
+         ]
+        }
+     }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Any MCP-compatible client reads this config and spawns the server as a
+      child process automatically. No ports, no URLs — just a path and a
+      command.
+    </p>
+  </PNotes>
+</p-slide>
