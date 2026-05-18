@@ -2,7 +2,7 @@ export function listenGroupFragment(el, nameFragment) {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(() => {
       const elements = document.querySelectorAll(
-        `[group-fragment="${nameFragment}"]`
+        `[group-fragment="${nameFragment}"]`,
       );
       elements.forEach((el, index, nodeList) => {
         const ariaHidden = el.getAttribute("aria-hidden");
@@ -28,15 +28,18 @@ export function listenSlideAutoplay(el) {
       const timing = mutation.target.getAttribute("timing-fragment") || 100;
       if (!isVisibile) return;
       const elements = el.querySelectorAll(
-        `p-fragment:not([no-autoplay]), [p-fragment]:not([no-autoplay])`
+        `p-fragment:not([no-autoplay]), [p-fragment]:not([no-autoplay])`,
       );
       elements.forEach((el, index) => {
         const ariaHidden = el.getAttribute("aria-hidden");
         const timingStart = el.getAttribute("timing-start");
         if (ariaHidden === "true") {
-          setTimeout(() => {
-            el.setAttribute("aria-hidden", "false");
-          }, (+timingStart || +defaultTiming) + timing * index);
+          setTimeout(
+            () => {
+              el.setAttribute("aria-hidden", "false");
+            },
+            (+timingStart || +defaultTiming) + timing * index,
+          );
         }
       });
     });
@@ -58,6 +61,7 @@ export function listenSlideFollowFragment(el) {
         block: "center",
         inline: "nearest",
       });
+      console.log("🚀 ~ listenSlideFollowFragment ~ el:", el);
     });
   });
   observer.observe(el, {
@@ -75,7 +79,10 @@ document.querySelectorAll(`p-fragment[group-fragment]`).forEach((el) => {
 });
 
 document
-  .querySelectorAll(`p-slide[follow-fragments] p-fragment`)
+  .querySelectorAll(
+    `p-slide[follow-fragments] p-fragment, p-slide[follow-fragments] [p-fragment]`,
+  )
   .forEach((el) => {
+    console.log("🚀 ~ el:", el);
     listenSlideFollowFragment(el);
   });

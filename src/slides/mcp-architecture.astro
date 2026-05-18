@@ -1,0 +1,215 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="center">
+  <h1><span class="main-gradient">Transport</span> 🚌</h1>
+</p-slide>
+<p-slide>
+  <h2 class="main-gradient">stdio</h2>
+  <ul>
+    <p-fragment
+      ><li>
+        🖥️ <span class="main-sub-gradient">Local</span> process
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        📨 Communication via <span class="main-sub-gradient">stdin/stdout</span>
+      </li></p-fragment
+    >
+    <p-fragment><li>⚡ Zero network, zero overhead</li></p-fragment>
+  </ul>
+  <PNotes>
+    <p>
+      stdio is the simplest transport: the host spawns the MCP server as a child
+      process and communicates via standard input/output. No ports, no network,
+      no authentication needed. Perfect for local tools like CLI helpers or
+      editor plugins.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h2 class="main-gradient">HTTP + SSE</h2>
+  <ul>
+    <p-fragment
+      ><li>
+        🌐 <span class="main-sub-gradient">Remote</span> service
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🔗 Communication via <span class="main-sub-gradient">HTTP + SSE</span>
+      </li></p-fragment
+    >
+    <p-fragment><li>👥 Multiple concurrent clients</li></p-fragment>
+    <p-fragment
+      ><li>
+        ☁️ Ideal for <span class="main-sub-gradient"
+          >server-side deployments</span
+        >
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🏢 Best for <span class="main-sub-gradient">shared APIs</span>, cloud
+        &amp; multi-tenant services
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      SSE (Server-Sent Events) is a standard for pushing real-time updates from
+      a server to a client over HTTP.
+    </p>
+    <p>
+      HTTP with SSE is for remote servers: the client sends requests over HTTP
+      POST and receives streamed responses via SSE. This allows multiple clients
+      to connect simultaneously and enables deployment on any infrastructure.
+      Choose this when you need a shared API accessible by multiple teams or
+      services.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h5 class="center">
+    <span class="main-gradient">HTTP + SSE</span> — two channels
+  </h5>
+  <pre
+    class="small-line"
+    data-label-file="http-sse.js">
+  <code is:raw class="language-javascript">// 1. Open the SSE stream
+  // The server will push responses/events here
+  const sse = new EventSource('/sse');
+
+  sse.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    handle(message);
+  };</code>
+</pre>
+
+  <PNotes>
+    <p>
+      The older HTTP + SSE transport used two separate channels: a long-lived
+      GET request for server-sent events, and a POST endpoint for client
+      messages.
+    </p>
+    <p>
+      The session ID connects those two channels on the server side. This works,
+      but it adds operational complexity: the server has to keep track of open
+      streams, sessions, idle connections and proxy behavior.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <pre
+    class="small-line"
+    data-label-file="http-sse.js">
+  <code style="font-size: 1.04rem;" is:raw class="language-javascript">// 2. Send MCP requests to a separate endpoint
+  await fetch('/message?</code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">sessionId=abc123'</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      </code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">id: 1,</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">
+      method: 'tools/call',
+      params: {
+        name: 'get-orders',
+        arguments: {
+          customerId: '123'
+        }
+      }
+    })
+  });</code></pre>
+</p-slide>
+
+<p-slide>
+  <h2 class="main-gradient">Streamable HTTP</h2>
+  <ul>
+    <p-fragment
+      ><li>
+        🆕 The <span class="main-sub-gradient">new standard</span> — replaces HTTP
+        + SSE
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🔀 Single endpoint, <span class="main-sub-gradient"
+          >optional streaming</span
+        >
+      </li></p-fragment
+    >
+    <p-fragment><li>🔄 Supports stateless &amp; stateful modes</li></p-fragment>
+    <p-fragment
+      ><li>
+        ✅ Better fit for <span class="main-sub-gradient"
+          >modern infrastructure</span
+        > (proxies, load balancers)
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      Streamable HTTP is the evolution of HTTP+SSE introduced in the 2025 MCP
+      spec revision. A single HTTP endpoint handles both regular
+      request/response and streaming via chunked transfer. It works seamlessly
+      behind proxies and load balancers that may not support SSE well, and
+      supports both stateless (simpler) and stateful (session-based) server
+      modes.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h5 style="margin-block-end: 1rem;" class="center">
+    <span class="main-gradient">Streamable HTTP</span> — one endpoint
+  </h5>
+  <pre
+    class="small-line"
+    data-label-file="streamable-http.js">
+  <code style="font-size: 1.04rem;" is:raw class="language-javascript">// Single endpoint, regular HTTP request
+  const res = await fetch(</code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">'/mcp'</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json, text/event-stream'
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'tools/call',
+      params: {
+        name: 'get-orders',
+        arguments: { customerId: '123' }
+      }
+    })
+  });</code></pre>
+  <PNotes>
+    <p>
+      The key difference is not just fewer connections: it is a simpler model.
+      Streamable HTTP uses one endpoint for MCP messages. The client sends a
+      normal HTTP request, and the server can either return a regular JSON
+      response or stream events when needed.
+    </p>
+    <p>
+      The client must include an Accept header to indicate support for streaming
+      and application/json responses. The server can then choose to send a
+      single JSON response or stream events as needed.
+    </p>
+    <p>
+      In stateless mode, there is no session ID to manage and no long-lived GET
+      connection sitting idle, which makes it easier to deploy behind modern
+      infrastructure.
+    </p>
+  </PNotes>
+</p-slide>
+
+<style lang="scss">
+  ul {
+    p-fragment:not(:last-of-type) li {
+      margin-block-end: 1.5rem;
+    }
+  }
+</style>

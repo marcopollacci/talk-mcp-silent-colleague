@@ -37,3 +37,21 @@
     padding-block: 0 !important;
   }
 }
+
+code[p-effect~="highlight"] {
+  background: linear-gradient(
+      color-mix(
+        in srgb,
+        var(--ending-point-gradient, oklch(0.6 0.1 80deg)),
+        transparent var(--highlight-transparency, 50%)
+      )
+    )
+    0 / calc(100% * var(--fragment-progress)) auto no-repeat;
+  filter: none;
+  &[aria-hidden="false"] {
+    color: #fff;
+    span.token {
+      color: #fff;
+    }
+  }
+}
