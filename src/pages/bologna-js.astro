@@ -13,6 +13,7 @@ import McpHttp from "../slides/mcp-http.astro";
 import McpOutro from "../slides/mcp-outro.astro";
 import McpStdio from "../slides/mcp-stdio.astro";
 import McpStructure from "../slides/mcp-structure.astro";
+import Repo from "../slides/repo.astro";
 import Thanks from "../slides/thanks.astro";
 const favIcon = favicon.src;
 const canRender = import.meta.env.DEV || new Date("2026-05-27") < new Date();
@@ -42,6 +43,7 @@ const metaData = {
           qrLinkRating={qrLinkRating}
           qrLink={qrLinkTalk}
           urlLink={metaData.site}
+          RepoSlide={Repo}
         />
       </>
     )
