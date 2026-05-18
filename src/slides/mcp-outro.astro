@@ -1,0 +1,98 @@
+---
+import { Image } from "astro:assets";
+import PNotes from "../components/PNotes.astro";
+import recap from "../img/recap-time-it.jpg";
+---
+
+<p-slide class="cover-internal" autoplay>
+  <Image
+    p-effect="zoom"
+    src={recap}
+    alt="Recap time!"
+    class="alter-image-size"
+    style="height: 10em; border-radius: 0.5em;--fragment-duration: 2.5s;"
+  />
+</p-slide>
+<p-slide>
+  <ul>
+    <li style="margin-block-end: 1.5rem;">
+      🤝 <span class="main-sub-gradient">MCP</span> — a standard protocol to connect
+      LLMs with tools, resources and prompts
+    </li>
+
+    <p-fragment
+      ><li>
+        🖥️ <span class="main-sub-gradient">stdio</span> — local process, zero config,
+        ideal for CLI tools and editor plugins
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🌐 <span class="main-sub-gradient">HTTP</span> — remote service, multiple
+        clients, deployable anywhere
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🔐 <span class="main-sub-gradient">OAuth 2.0</span> — required for public
+        servers, use better-auth to avoid reinventing the wheel
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      Quick recap of the four pillars of the talk. MCP as the standard, the two
+      transports and when to pick each, and OAuth as the auth layer for anything
+      exposed to the internet.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">stdio or HTTP?</h3>
+  <ul>
+    <p-fragment
+      ><li>
+        🖥️ Local tool, CLI, editor plugin → <span class="main-sub-gradient"
+          >stdio</span
+        >
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🌐 Remote service, multiple clients, cloud deploy → <span
+          class="main-sub-gradient">HTTP</span
+        >
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        🔐 Need auth for online clients like claude.ai → <span
+          class="main-sub-gradient">HTTP + OAuth 2.1</span
+        >
+      </li></p-fragment
+    >
+    <p-fragment
+      ><li>
+        💡 When in doubt → <span class="main-sub-gradient"
+          >start with stdio</span
+        >, migrate to HTTP when needed
+      </li></p-fragment
+    >
+  </ul>
+  <PNotes>
+    <p>
+      The decision tree is simple. Start local with stdio — it's the fastest
+      path to a working server. Move to HTTP only when you need remote access or
+      multiple concurrent clients.
+    </p>
+  </PNotes>
+</p-slide>
+
+<style lang="scss">
+  ul {
+    p-fragment:not(:last-of-type) li {
+      margin-block-end: 1.5rem;
+    }
+  }
+</style>
