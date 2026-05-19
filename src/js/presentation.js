@@ -61,7 +61,6 @@ export function listenSlideFollowFragment(el) {
         block: "center",
         inline: "nearest",
       });
-      console.log("🚀 ~ listenSlideFollowFragment ~ el:", el);
     });
   });
   observer.observe(el, {
@@ -83,6 +82,5 @@ document
     `p-slide[follow-fragments] p-fragment, p-slide[follow-fragments] [p-fragment]`,
   )
   .forEach((el) => {
-    console.log("🚀 ~ el:", el);
     listenSlideFollowFragment(el);
   });
