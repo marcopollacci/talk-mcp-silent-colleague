@@ -20,24 +20,18 @@ import recap from "../img/recap-time-it.jpg";
       LLMs with tools, resources and prompts
     </li>
 
-    <p-fragment
-      ><li>
-        🖥️ <span class="main-sub-gradient">stdio</span> — local process, zero config,
-        ideal for CLI tools and editor plugins
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        🌐 <span class="main-sub-gradient">HTTP</span> — remote service, multiple
-        clients, deployable anywhere
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        🔐 <span class="main-sub-gradient">OAuth 2.0</span> — required for public
-        servers, use better-auth to avoid reinventing the wheel
-      </li></p-fragment
-    >
+    <li p-fragment p-effect="from left">
+      🖥️ <span class="main-sub-gradient">stdio</span> — local process, zero config,
+      ideal for CLI tools and editor plugins
+    </li>
+    <li p-fragment p-effect="from right">
+      🌐 <span class="main-sub-gradient">HTTP</span> — remote service, multiple clients,
+      deployable anywhere
+    </li>
+    <li p-fragment p-effect="from below">
+      🔐 <span class="main-sub-gradient">OAuth 2.0</span> — required for public servers,
+      use better-auth to avoid reinventing the wheel
+    </li>
   </ul>
   <PNotes>
     <p>
@@ -96,7 +90,7 @@ import recap from "../img/recap-time-it.jpg";
 
 <style lang="scss">
   ul {
-    p-fragment:not(:last-of-type) li {
+    li[p-fragment]:not(:last-of-type) {
       margin-block-end: 1.5rem;
     }
   }

@@ -38,24 +38,18 @@ import PNotes from "../components/PNotes.astro";
     What is PKCE - Proof Key for Code Exchange?
   </h3>
   <ul>
-    <p-fragment>
-      <li>
-        🧪 Client creates a random <code>code_verifier</code>
-      </li>
-    </p-fragment>
-    <p-fragment>
-      <li>
-        🧬 Sends only a hashed <code>code_challenge</code> during login
-      </li>
-    </p-fragment>
-    <p-fragment>
-      <li>
-        🎫 Sends the original <code>code_verifier</code> when exchanging the code
-      </li>
-    </p-fragment>
-    <p-fragment>
-      <li>🛡️ Prevents stolen authorization codes from being reused</li>
-    </p-fragment>
+    <li p-fragment p-effect="from left">
+      🧪 Client creates a random <code>code_verifier</code>
+    </li>
+    <li p-fragment p-effect="from right">
+      🧬 Sends only a hashed <code>code_challenge</code> during login
+    </li>
+    <li p-fragment p-effect="from left">
+      🎫 Sends the original <code>code_verifier</code> when exchanging the code
+    </li>
+    <li p-fragment p-effect="zoom">
+      🛡️ Prevents stolen authorization codes from being reused
+    </li>
   </ul>
 
   <PNotes>
@@ -79,30 +73,22 @@ import PNotes from "../components/PNotes.astro";
 <p-slide>
   <h3 class="cover-internal-sub-section-all">The OAuth flow</h3>
   <ul>
-    <p-fragment
-      ><li>
-        🔍 <span class="main-sub-gradient">1. Discovery</span> — client discovers
-        the OAuth metadata
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        👤 <span class="main-sub-gradient">2. Authorization</span> — user logs in
-        and grants permission
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        🎫 <span class="main-sub-gradient">3. Token exchange</span> — client gets
-        an access token
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        ✅ <span class="main-sub-gradient">4. Authenticated requests</span> — token
-        sent as <code>Authorization: Bearer</code>
-      </li></p-fragment
-    >
+    <li p-fragment p-effect="from left">
+      🔍 <span class="main-sub-gradient">1. Discovery</span> — client discovers the
+      OAuth metadata
+    </li>
+    <li p-fragment p-effect="from right">
+      👤 <span class="main-sub-gradient">2. Authorization</span> — user logs in and
+      grants permission
+    </li>
+    <li p-fragment p-effect="from left">
+      🎫 <span class="main-sub-gradient">3. Token exchange</span> — client gets an
+      access token
+    </li>
+    <li p-fragment p-effect="from right">
+      ✅ <span class="main-sub-gradient">4. Authenticated requests</span> — token
+      sent as <code>Authorization: Bearer</code>
+    </li>
   </ul>
   <PNotes>
     <p>
@@ -229,28 +215,20 @@ import PNotes from "../components/PNotes.astro";
     > 🙏
   </h3>
   <ul>
-    <p-fragment
-      ><li>
-        📦 <span class="main-sub-gradient">@auth/core</span>
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        ⚡ <span class="main-sub-gradient">better-auth</span>
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        ☁️ <span class="main-sub-gradient">Clerk / Auth0</span>
-      </li></p-fragment
-    >
-    <p-fragment
-      ><li>
-        👀 The MCP SDK will soon ship <span class="main-sub-gradient"
-          >built-in OAuth helpers</span
-        >
-      </li></p-fragment
-    >
+    <li p-fragment p-effect="zoom">
+      📦 <span class="main-sub-gradient">@auth/core</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      ⚡ <span class="main-sub-gradient">better-auth</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      ☁️ <span class="main-sub-gradient">Clerk / Auth0</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      👀 The MCP SDK will soon ship <span class="main-sub-gradient"
+        >built-in OAuth helpers</span
+      >
+    </li>
   </ul>
   <PNotes>
     <p>
@@ -262,7 +240,7 @@ import PNotes from "../components/PNotes.astro";
 </p-slide>
 <style lang="scss">
   ul {
-    p-fragment:not(:last-of-type) li {
+    li[p-fragment]:not(:last-of-type) {
       margin-block-end: 1.5rem;
     }
   }
