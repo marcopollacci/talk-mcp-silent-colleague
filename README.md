@@ -1,16 +1,18 @@
-# Some beautiful title
+# MCP: the silent colleague connecting your services to the AI
 
-Slides for what?.
+Slides for the talk "MCP: the silent colleague connecting your services to the AI"
 
-Originally conceived for the what?.
+Originally conceived for [BolognaJS May Meetup 2026](https://www.meetup.com/it-it/bologna-js-meetup/)
 
 Built on top of [P-Slides](https://github.com/MaxArt2501/p-slides)!
 
 # Url Slide
 
+- [27/05/2026 - BolognaJS May Meetup](https://talk-mcp-silent-colleague.marcotalk.dev/bologna-js/)
+
 ## Building
 
-Node.js >= 20.x is required.
+Node.js >= 24.x is required.
 
 To start the presentation in development mode:
 
