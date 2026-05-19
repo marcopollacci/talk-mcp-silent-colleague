@@ -1,0 +1,153 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="center">
+  <h2 p-effect="from above">🌐 <span class="main-gradient">WebMCP</span></h2>
+</p-slide>
+<p-slide>
+  <ul class="more-margin">
+    <li>
+      <span class="main-sub-gradient">W3C proposal</span> by <span
+        p-fragment
+        p-effect="highlight">Google & Microsoft</span
+      > to expose web app features to AI agents
+    </li>
+    <li p-fragment p-effect="from left">
+      Adds <code>navigator.modelContext</code> to the browser — a <span
+        class="main-sub-gradient">client-side MCP server</span
+      >
+    </li>
+    <li p-fragment p-effect="from left">
+      Agents stop <span class="main-sub-gradient">guessing from the UI</span>
+      — the app tells them exactly what's possible
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      WebMCP brings MCP into the browser. Instead of screen scraping, a site
+      registers its tools via navigator.modelContext and the agent invokes them
+      directly — like turning a webpage into an MCP server, entirely
+      client-side.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide follow-fragments>
+  <h5 class="center">
+    <span class="main-gradient">Registering a tool - imperative mode</span>
+  </h5>
+  <pre
+    class="small-line"
+    data-label-file="app.ts">
+<code style="font-size: 0.6em" is:raw class="language-typescript">
+    await navigator.modelContext.registerTool({
+    name: "search-products",
+    description: "Search the product catalog by keyword",
+    inputSchema: {
+        type: "object",
+        properties: {
+        query: { type: "string", description: "Search term" }
+        },
+        required: ["query"]
+    },
+    </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-typescript">
+    execute: async ({ query }) => {
+        const results = await api.search(query);
+        return { content: [
+            { type: "text", text: JSON.stringify(results) }
+        ] };
+    }
+    });
+</code>
+  </p-fragment>
+  </pre>
+  <PNotes>
+    <p>Same shape as a regular MCP tool — name, description, inputSchema.</p>
+    <p>
+      The key difference is <code>execute</code>: it runs in the browser, with
+      direct access to app state, the DOM, cookies — everything. No round-trip
+      to the server.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide follow-fragments>
+  <h5 class="center">
+    <span class="main-gradient">Registering a tool - declarative mode</span>
+  </h5>
+  <pre
+    class="small-line"
+    data-label-file="search-form.html">
+<code is:raw class="language-html">
+    &lt;form
+      toolname="search-products"
+      tooldescription="Search the product catalog by keyword"
+      action="/search"
+    &gt;
+    &lt;!-- some beautiful input --&gt;
+    &lt;/form&gt;
+</code>
+  </pre>
+  <PNotes>
+    <p>
+      In declarative mode, we don't register the tool from JavaScript. We
+      describe it directly in HTML.
+    </p>
+    <p>
+      The form becomes the tool: <code>toolname</code> is the tool name,
+      <code>tooldescription</code> explains what it does, and form fields become the
+      input parameters.
+    </p>
+    <p>
+      This is powerful because existing HTML semantics are reused instead of
+      creating a completely separate integration layer.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h2 class="main-gradient" p-effect="from above">Where are we now?</h2>
+  <ul class="more-margin">
+    <li p-fragment p-effect="from left">
+      Available only in <span class="main-sub-gradient">Chrome, from 149+</span> —
+      behind a flag, still experimental
+    </li>
+    <li p-fragment p-effect="from left">
+      Requires an <span class="main-sub-gradient">open browser tab</span> — not a
+      headless replacement for backend MCP
+    </li>
+    <li p-fragment p-effect="from left">
+      No cross-browser support yet —
+      <span class="main-sub-gradient">standardization in progress</span>
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      Still experimental — treat it as a preview, not a production standard. The
+      key mental model: WebMCP complements backend MCP, it doesn't replace it.
+      It shines when the user is actively on the page and the agent assists them
+      in context.
+    </p>
+    <p>
+      The exact Chrome version with flag support shifts — always verify current
+      status before quoting a specific number in the talk.
+    </p>
+  </PNotes>
+</p-slide>
+<style lang="scss">
+  [p-effect~="highlight"] {
+    background: linear-gradient(
+        color-mix(
+          in srgb,
+          var(--ending-point-gradient, oklch(0.6 0.1 80deg)),
+          transparent var(--highlight-transparency, 85%)
+        )
+      )
+      0 / calc(100% * var(--fragment-progress)) auto no-repeat;
+    filter: none;
+    &[aria-hidden="false"] {
+      border: 1px solid var(--ending-point-gradient);
+    }
+  }
+</style>
