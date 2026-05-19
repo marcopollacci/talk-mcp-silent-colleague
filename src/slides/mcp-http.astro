@@ -41,23 +41,9 @@ import PNotes from "../components/PNotes.astro";
 <code style="font-size: 0.6em" is:raw class="language-javascript">
     //...other imports
     import express from "express";
-    const createServer = () => {
-        const server = new McpServer({
-            name: "my-mcp-http-server",
-            version: "1.0.0",
-        });
-
-        server.tool(
-            "greet",
-            "Returns a greeting for the given name",
-            { name: z.string() },
-            async ({ name }) => ({
-            content: [{ type: "text", text: `Hello, ${name}!` }],
-            }),
-        );
-        return server;
-    }</code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
-
+    // create server..
+    // register tools..
+    </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
     const app = express();
     app.use(express.json());
 
