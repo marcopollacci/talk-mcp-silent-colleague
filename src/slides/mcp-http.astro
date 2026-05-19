@@ -11,7 +11,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="package.json">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     {
       "name": "http",
       "type": "module",
@@ -38,7 +38,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 1.1rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     //...other imports
     import express from "express";
     const createServer = () => {
@@ -56,14 +56,14 @@ import PNotes from "../components/PNotes.astro";
             }),
         );
         return server;
-    }</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+    }</code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
 
     const app = express();
     app.use(express.json());
 
     app.post("/mcp", async (req, res) => {
-     const transport = </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });</code>
-<code style="font-size: 1.3rem" is:raw class="language-javascript">     const server = createServer();
+     const transport = </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });</code>
+<code style="font-size: 0.6em" is:raw class="language-javascript">     const server = createServer();
      await server.connect(transport);
      await transport.handleRequest(req, res, req.body);
     });
@@ -83,7 +83,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="mcp.json">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     {
       "mcpServers": {
         "my-http-mcp-server": {

@@ -12,16 +12,16 @@ import PNotes from "../components/PNotes.astro";
 <p-slide class="center" style="--scale-from: 3.5;--fragment-duration: 1s">
   <h3
     p-effect="zoom fade"
-    style="font-size: 1.6rem; opacity: 0.6; margin-block-end: 0.5em;;"
+    style="font-size: 0.6em; opacity: 0.6; margin-block-end: 0.5em;;"
   >
     your MCP server is on the internet now...
   </h3>
-  <h2 p-effect="zoom fade" style="font-size: 5rem;">
+  <h2 p-effect="zoom fade" style="font-size: 1.5em;">
     <span class="main-gradient">who's allowed to call it?</span> 🤔
   </h2>
   <p
     p-effect="zoom fade"
-    style="font-size: 1.6rem; margin-block-start: 1em; opacity: 0.7;"
+    style="font-size: 0.6em; margin-block-start: 1em; opacity: 0.7;"
   >
     The MCP spec answers this with <strong>OAuth 2.1 + PKCE</strong>
   </p>
@@ -106,7 +106,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="/.well-known/oauth-authorization-server">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     {
         "issuer": "https://my-mcp-server.com",
         "authorization_endpoint": "https://my-mcp-server.com/oauth/authorize",
@@ -126,13 +126,13 @@ import PNotes from "../components/PNotes.astro";
 </p-slide>
 
 <p-slide>
-  <h3 style="margin-block-end: 1em;">
+  <h3 style="margin-block-end: 0.6em;">
     <span class="cover-internal-sub-section-all">Validating the token</span> 🛡️
   </h3>
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">//...
+<code style="font-size: 0.6em" is:raw class="language-javascript">//...
     import { betterAuth } from "better-auth";
     import { bearer } from "better-auth/plugins";
 
@@ -163,7 +163,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">    const createServer = () => {
+<code style="font-size: 0.6em" is:raw class="language-javascript">    const createServer = () => {
     const server = new McpServer({
         name: "my-mcp-http-oauth2-server",
         version: "1.0.0",
@@ -179,13 +179,13 @@ import PNotes from "../components/PNotes.astro";
     );
 
     return server;
-    };</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+    };</code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
 
     const app = express();
     app.use(express.json());
 
     app.post("/mcp", async (req, res) => {
-    </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">const session = await auth.api.getSession({ headers: req.headers });</code><code style="font-size: 1.3rem" is:raw class="language-javascript">
+    </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">const session = await auth.api.getSession({ headers: req.headers });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
 
     if (!session?.user) {
         return res.status(401).json({ error: "unauthorized" });
@@ -241,7 +241,7 @@ import PNotes from "../components/PNotes.astro";
 <style lang="scss">
   ul {
     li[p-fragment]:not(:last-of-type) {
-      margin-block-end: 1.5rem;
+      margin-block-end: 0.55em;
     }
   }
 </style>

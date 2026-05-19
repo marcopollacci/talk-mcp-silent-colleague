@@ -13,7 +13,8 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="package.json">
-    <code style="font-size: 1.3rem" is:raw class="language-javascript">{
+    <code style="font-size: 0.6em" is:raw class="language-javascript">
+    {
         "name": "stdio",
         "type": "module",
         "scripts": {
@@ -36,7 +37,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
     import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
     import { z } from "zod";
@@ -44,7 +45,7 @@ import PNotes from "../components/PNotes.astro";
     const server = new McpServer({
       name: "my-mcp-server",
       version: "1.0.0",
-    });</code><p-fragment><code style="font-size: 1.3rem" is:raw class="language-javascript">
+    });</code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
     
     server.tool(
        "greet",
@@ -55,9 +56,9 @@ import PNotes from "../components/PNotes.astro";
        })
     );
 
-    const transport = </code><code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript">new StdioServerTransport();</code>
+    const transport = </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">new StdioServerTransport();</code>
   
-  <code p-fragment p-effect="highlight" style="font-size: 1.3rem" is:raw class="language-javascript"> await server.connect(transport);
+  <code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript"> await server.connect(transport);
 </code></p-fragment>
   </pre>
   <PNotes>
@@ -73,7 +74,7 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="mcp.json">
-<code style="font-size: 1.3rem" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
     {
       "mcpServers": {
         "my-stdio-mcp-server": {

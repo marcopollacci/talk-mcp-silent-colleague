@@ -103,7 +103,7 @@ import underTheHood from "../img/under-the-hood.webp";
 </p-slide>
 <p-slide class="center">
   <h2 class="main-gradient">Capabilities</h2>
-  <span style="font-size: 8rem">🤹</span>
+  <span style="font-size: 12rem">🤹</span>
   <PNotes>
     <p>
       MCP provides a set of capabilities that allow AI models to interact with
@@ -113,12 +113,14 @@ import underTheHood from "../img/under-the-hood.webp";
   </PNotes>
 </p-slide>
 <p-slide data-capabilities autoplay timing="700">
-  <p-fragment p-effect="zoom" timing-start="700"><p>🧰 Tools</p></p-fragment>
+  <p-fragment p-effect="zoom" timing-start="700"
+    ><p style="font-size: 10rem;">🧰 Tools</p></p-fragment
+  >
   <p-fragment p-effect="zoom" timing-start="1100"
-    ><p>📦 Resources</p></p-fragment
+    ><p style="font-size: 10rem;">📦 Resources</p></p-fragment
   >
   <p-fragment p-effect="insert" timing-start="1500"
-    ><p>💬 Prompts</p></p-fragment
+    ><p style="font-size: 10rem;">💬 Prompts</p></p-fragment
   >
 </p-slide>
 <p-slide>
@@ -361,8 +363,7 @@ import underTheHood from "../img/under-the-hood.webp";
   <pre
     class="small-line"
     data-label-file="server.ts">
-<code style="line-height: 1.2; font-size: 1.2rem" is:raw class="language-typescript">
-  server.prompt(
+<code style="line-height: 1.2; font-size: 0.7em" is:raw class="language-typescript">  server.prompt(
     "customer-support",
     "Generates a support context for a customer",
     { customerId: z.string() },
@@ -371,7 +372,8 @@ import underTheHood from "../img/under-the-hood.webp";
         role: "user",
         content: {
           type: "text",
-          text: `Customer ${customerId} needs help.Use the available customer/order tools if needed,
+          text: `Customer ${customerId} needs help.Use the available
+                 customer/order tools if needed,
                  then suggest next steps.`,
         },
       }],
@@ -409,7 +411,7 @@ import underTheHood from "../img/under-the-hood.webp";
   <pre
     class="small-line"
     data-label-file="prompt-response.json">
-<code style="line-height: 1.2; font-size: 1.4rem" is:raw class="language-javascript">
+<code style="line-height: 1.2; font-size: 0.8em" is:raw class="language-javascript">
   {
     "jsonrpc": "2.0",
     "id": 4,

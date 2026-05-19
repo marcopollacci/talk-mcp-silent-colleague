@@ -107,15 +107,15 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="http-sse.js">
-  <code style="font-size: 1.04rem;" is:raw class="language-javascript">// 2. Send MCP requests to a separate endpoint
-  await fetch('/message?</code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">sessionId=abc123'</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">,{
+  <code style="font-size: 0.7em;" is:raw class="language-javascript">// 2. Send MCP requests to a separate endpoint
+  await fetch('/message?</code><code p-fragment p-effect="highlight" style="font-size: 0.7em;" is:raw class="language-javascript">sessionId=abc123'</code><code style="font-size: 0.7em;" is:raw class="language-javascript">,{
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
-      </code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">id: 1,</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">
+      </code><code p-fragment p-effect="highlight" style="font-size: 0.7em;" is:raw class="language-javascript">id: 1,</code><code style="font-size: 0.7em;" is:raw class="language-javascript">
       method: 'tools/call',
       params: {
         name: 'get-orders',
@@ -170,8 +170,8 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="streamable-http.js">
-  <code style="font-size: 1.04rem;" is:raw class="language-javascript">// Single endpoint, regular HTTP request
-  const res = await fetch(</code><code p-fragment p-effect="highlight" style="font-size: 1.04rem;" is:raw class="language-javascript">'/mcp'</code><code style="font-size: 1.04rem;" is:raw class="language-javascript">, {
+  <code style="font-size: 0.7em;" is:raw class="language-javascript">// Single endpoint, regular HTTP request
+  const res = await fetch(</code><code p-fragment p-effect="highlight" style="font-size: 0.7em;" is:raw class="language-javascript">'/mcp'</code><code style="font-size: 0.7em;" is:raw class="language-javascript">, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -209,7 +209,7 @@ import PNotes from "../components/PNotes.astro";
 <style lang="scss">
   ul {
     p-fragment:not(:last-of-type) li {
-      margin-block-end: 1.5rem;
+      margin-block-end: 0.55em;
     }
   }
 </style>
