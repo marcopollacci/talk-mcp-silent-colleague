@@ -10,14 +10,14 @@ importers:
     dependencies:
       astro:
         specifier: ^6.3.5
-        version: 6.3.5(@types/node@25.9.0)(rollup@4.50.0)(sass@1.99.0)
+        version: 6.3.5(@types/node@25.9.1)(rollup@4.50.0)(sass@1.99.0)
       p-slides:
         specifier: ^1.5.1
         version: 1.5.1
     devDependencies:
       '@types/node':
-        specifier: ^25.9.0
-        version: 25.9.0
+        specifier: ^25.9.1
+        version: 25.9.1
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -35,7 +35,7 @@ importers:
         version: 0.34.5
       vite-plugin-static-copy:
         specifier: ^4.1.0
-        version: 4.1.0(vite@7.3.2(@types/node@25.9.0)(sass@1.99.0))
+        version: 4.1.0(vite@7.3.2(@types/node@25.9.1)(sass@1.99.0))
 
 packages:
 
@@ -666,8 +666,8 @@ packages:
   '@types/nlcst@2.0.3':
     resolution: {integrity: sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA==}
 
-  '@types/node@25.9.0':
-    resolution: {integrity: sha512-AOQwYUNolgy3VosiRqXrACUXTN8nJUtPl7FJXMqZVyxiiCLhQuG3jXKvCS1ALr+Y2OmZhzzLVlYPEqJaiqkaJQ==}
+  '@types/node@25.9.1':
+    resolution: {integrity: sha512-xfrlY7UD5rMJk3ZVJP8BNzS28J36YJg+xp+LPXV1TdWxr8uMH5A860QNxYDGQe/ylDSgjxE52Q9VnO7p75tJxg==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -2080,7 +2080,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/node@25.9.0':
+  '@types/node@25.9.1':
     dependencies:
       undici-types: 7.24.6
 
@@ -2099,7 +2099,7 @@ snapshots:
 
   array-iterate@2.0.1: {}
 
-  astro@6.3.5(@types/node@25.9.0)(rollup@4.50.0)(sass@1.99.0):
+  astro@6.3.5(@types/node@25.9.1)(rollup@4.50.0)(sass@1.99.0):
     dependencies:
       '@astrojs/compiler': 4.0.0
       '@astrojs/internal-helpers': 0.9.1
@@ -2151,8 +2151,8 @@ snapshots:
       unist-util-visit: 5.1.0
       unstorage: 1.17.5
       vfile: 6.0.3
-      vite: 7.3.2(@types/node@25.9.0)(sass@1.99.0)
-      vitefu: 1.1.2(vite@7.3.2(@types/node@25.9.0)(sass@1.99.0))
+      vite: 7.3.2(@types/node@25.9.1)(sass@1.99.0)
+      vitefu: 1.1.2(vite@7.3.2(@types/node@25.9.1)(sass@1.99.0))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.3.6
@@ -3325,15 +3325,15 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite-plugin-static-copy@4.1.0(vite@7.3.2(@types/node@25.9.0)(sass@1.99.0)):
+  vite-plugin-static-copy@4.1.0(vite@7.3.2(@types/node@25.9.1)(sass@1.99.0)):
     dependencies:
       chokidar: 3.6.0
       p-map: 7.0.4
       picocolors: 1.1.1
       tinyglobby: 0.2.15
-      vite: 7.3.2(@types/node@25.9.0)(sass@1.99.0)
+      vite: 7.3.2(@types/node@25.9.1)(sass@1.99.0)
 
-  vite@7.3.2(@types/node@25.9.0)(sass@1.99.0):
+  vite@7.3.2(@types/node@25.9.1)(sass@1.99.0):
     dependencies:
       esbuild: 0.27.3
       fdir: 6.5.0(picomatch@4.0.4)
@@ -3342,13 +3342,13 @@ snapshots:
       rollup: 4.50.0
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.9.0
+      '@types/node': 25.9.1
       fsevents: 2.3.3
       sass: 1.99.0
 
-  vitefu@1.1.2(vite@7.3.2(@types/node@25.9.0)(sass@1.99.0)):
+  vitefu@1.1.2(vite@7.3.2(@types/node@25.9.1)(sass@1.99.0)):
     optionalDependencies:
-      vite: 7.3.2(@types/node@25.9.0)(sass@1.99.0)
+      vite: 7.3.2(@types/node@25.9.1)(sass@1.99.0)
 
   web-namespaces@2.0.1: {}
 
