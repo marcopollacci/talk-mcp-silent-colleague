@@ -28,7 +28,7 @@ import PNotes from "../components/PNotes.astro";
 </p-slide>
 <p-slide class="center">
   <h2 style="margin-block-end: 0.2rem;" class="cover-internal-sub-section-all">
-    HTTP -Authentication
+    HTTP - Authentication
   </h2>
   <h3 style="margin-block-start: 0.8rem;">OAuth 2.0 🔐</h3>
 </p-slide>
@@ -124,33 +124,48 @@ import PNotes from "../components/PNotes.astro";
   </PNotes>
 </p-slide>
 
-<p-slide>
+<p-slide follow-fragments>
   <h3 style="margin-block-end: 0.6em;">
-    <span class="cover-internal-sub-section-all">Validating the token</span> 🛡️
+    <span class="cover-internal-sub-section-all"
+      >Becoming an OAuth provider</span
+    > 🛡️
   </h3>
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">//...
-    import { betterAuth } from "better-auth";
-    import { bearer } from "better-auth/plugins";
+<code style="font-size: 0.6em" is:raw class="language-javascript">    import { betterAuth } from "better-auth";
+    import { jwt } from "better-auth/plugins";
+    import { oauthProvider } from "@better-auth/oauth-provider";
 
     const auth = betterAuth({
-    baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
-    plugins: [bearer()],
-    socialProviders: {
+      baseURL: BASE_URL,
+      secret: process.env.BETTER_AUTH_SECRET,
+      disabledPaths: ["/token"],
+      plugins: [
+        </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">jwt({ disableSettingJwtHeader: true }),
+        oauthProvider({
+          loginPage: "/sign-in",
+          consentPage: "/consent",
+          allowDynamicClientRegistration: true,
+          allowUnauthenticatedClientRegistration: true,
+        }),
+      ],
+      socialProviders: {
         github: {
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
+          clientId: process.env.GITHUB_ID,
+          clientSecret: process.env.GITHUB_SECRET,
         },
-    },
-    });</code>
-  </pre>
+      },
+    });</code></p-fragment></pre>
   <PNotes>
     <p>
-      The bearer() plugin tells better-auth to accept Bearer tokens in the
-      Authorization header — exactly what the MCP client sends. No manual token
-      verification needed.
+      oauthProvider (from @better-auth/oauth-provider) turns better-auth into an
+      OAuth 2.1 authorization server. The jwt plugin is required to sign access
+      tokens; disableSettingJwtHeader prevents the token from leaking into
+      normal responses. disabledPaths: ["/token"] disables the built-in
+      better-auth /token endpoint that would conflict with the provider's
+      /oauth2/token. allowUnauthenticatedClientRegistration lets MCP clients
+      register as public clients on the fly, with no pre-registration needed.
     </p>
   </PNotes>
 </p-slide>
@@ -162,38 +177,43 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">    const createServer = () => {
-    // create server..
-    // register tools..
-    return server;
-    };</code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
+<code style="font-size: 0.6em" is:raw class="language-javascript">    import { verifyAccessToken } from "better-auth/oauth2";
+    import { toNodeHandler } from "better-auth/node";
 
     const app = express();
+    app.all("/api/auth/*", toNodeHandler(auth));
     app.use(express.json());
-
+    </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
     app.post("/mcp", async (req, res) => {
-    </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">const session = await auth.api.getSession({ headers: req.headers });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+      const accessToken = req.headers.authorization?.slice(7);
 
-    if (!session?.user) {
-        return res.status(401).json({ error: "unauthorized" });
-    }
+      try {
+        </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">await verifyAccessToken(accessToken, {
+          verifyOptions: { issuer: BASE_URL, audience: BASE_URL },
+        });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+      } catch {
+        </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">res.set("WWW-Authenticate",
+          `Bearer resource_metadata="${BASE_URL}/.well-known/oauth-protected-resource"`);
+        return res.status(401).json({ error: "unauthorized" });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+      }
 
-    const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
-    const server = createServer();
-    await server.connect(transport);
-    await transport.handleRequest(req, res, req.body);
-    });
-
-    app.listen(3000);</code></p-fragment>
+      const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
+      const server = createServer();
+      await server.connect(transport);
+      await transport.handleRequest(req, res, req.body);
+    });</code></p-fragment>
   </pre>
   <PNotes>
     <p>
-      Just call getSession() and check if a user is there before handing off to
-      the MCP transport. If the session is missing, return 401 — the MCP client
-      will kick off the OAuth flow automatically.
+      verifyAccessToken (from better-auth/oauth2) validates the JWT locally:
+      signature against /api/auth/jwks, issuer, audience, expiry. Zero network
+      calls. If it fails, the 401 with WWW-Authenticate points to the
+      protected-resource metadata — that header is what triggers the OAuth flow
+      on the MCP client side.
     </p>
   </PNotes>
 </p-slide>
+
 <p-slide>
   <h3>
     <span class="cover-internal-sub-section-all"
