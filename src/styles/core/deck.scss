@@ -17,6 +17,10 @@ p-deck {
       [p-fragment] {
         &[aria-hidden="true"][aria-current="false"] {
           opacity: 0.5;
+          transform: none;
+          translate: none;
+          scale: 1;
+          height: unset;
         }
       }
       transform: scale(var(--speaker-next-scale));
@@ -37,7 +41,9 @@ p-deck {
 }
 p-slide[debug],
 p-slide.debug {
-  box-shadow: inset 0 0 0 1em red, inset 0 0 0 1.1em green;
+  box-shadow:
+    inset 0 0 0 1em red,
+    inset 0 0 0 1.1em green;
 }
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
