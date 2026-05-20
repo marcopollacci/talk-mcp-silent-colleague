@@ -1,0 +1,76 @@
+---
+import { Image } from "astro:assets";
+import PNotes from "../components/PNotes.astro";
+import trueStory from "../img/true_story.png";
+---
+
+<p-slide class="center">
+  <h2 class="main-gradient">But where did I actually use it?</h2>
+  <Image
+    src={trueStory}
+    p-effect="from below"
+    alt="It's a true story!"
+    class="alter-image-size"
+    style="--image-start-size: 7em"
+  >
+    A couple of real cases 👇
+  </Image>
+  <PNotes>
+    <p>
+      Time to get concrete. Here are two places where I actually put MCP to work
+      — one you're looking at right now.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h2>🎤 <span class="main-gradient">These slides</span></h2>
+  <ul class="more-margin">
+    <li p-fragment p-effect="from right">
+      Built on <a href="https://github.com/MaxArt2501/p-slides">p-slides</a> — the
+      docs are the <span class="main-sub-gradient">MCP server</span>
+    </li>
+    <li p-fragment p-effect="from left">
+      Ai queries layout classes, effects and fragment rules
+      <span class="main-sub-gradient">before writing any code</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      Correct attribute form, right effect names,
+      <span class="main-sub-gradient">no hallucinated APIs</span>
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      I fed the p-slides docs and custom-elements.json into an MCP server. AI
+      then determined which layout class to use, whether to use the attribute or
+      tag form for fragments, which effects exist. The result is code that
+      actually works, first try.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h2>🧩 <span class="main-gradient">Design system tooling</span></h2>
+  <ul class="more-margin">
+    <li p-fragment p-effect="from left">
+      Each <span class="main-sub-gradient">Lit component</span> in the design system
+      exposed as an MCP tool
+    </li>
+    <li p-fragment p-effect="zoom">
+      Devs ask the AI: <em>"add a date picker with validation"</em> — it knows the
+      <span class="main-sub-gradient">exact API</span>
+    </li>
+    <li p-fragment p-effect="from right">
+      No more guessing props, slots, or events — the <span
+        class="main-sub-gradient">docs are the context</span
+      >
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      Same idea applied internally: the design system component docs become an
+      MCP server. AI assistants can suggest correct usage, right props, right
+      events — without hallucinating component APIs that don't exist.
+    </p>
+  </PNotes>
+</p-slide>
