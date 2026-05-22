@@ -66,8 +66,7 @@ import PNotes from "../components/PNotes.astro";
     <p>Same shape as a regular MCP tool — name, description, inputSchema.</p>
     <p>
       The key difference is <code>execute</code>: it runs in the browser, with
-      direct access to app state, the DOM, cookies — everything. No round-trip
-      to the server.
+      direct access to app state, the DOM, cookies — everything.
     </p>
   </PNotes>
 </p-slide>
@@ -111,7 +110,9 @@ import PNotes from "../components/PNotes.astro";
   <ul class="more-margin">
     <li p-fragment p-effect="from left">
       Available only in <span class="main-sub-gradient">Chrome, from 149+</span> —
-      behind a flag, still experimental
+      behind a flag, still experimental ( <code
+        >chrome://flags/#enable-webmcp-testing</code
+      >)
     </li>
     <li p-fragment p-effect="from left">
       Requires an <span class="main-sub-gradient">open browser tab</span> — not a

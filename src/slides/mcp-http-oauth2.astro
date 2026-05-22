@@ -5,7 +5,7 @@ import PNotes from "../components/PNotes.astro";
 <p-slide class="center" style="--scale-from: 3.5;--fragment-duration: 1s">
   <h3
     p-effect="zoom fade"
-    style="font-size: 0.6em; opacity: 0.6; margin-block-end: 0.5em;;"
+    style="font-size: 0.6em; opacity: 0.6; margin-block-end: 0.5em;"
   >
     your MCP server is on the internet now...
   </h3>
@@ -16,22 +16,39 @@ import PNotes from "../components/PNotes.astro";
     p-effect="zoom fade"
     style="font-size: 0.6em; margin-block-start: 1em; opacity: 0.7;"
   >
-    The MCP spec answers this with <strong>OAuth 2.1 + PKCE</strong>
+    MCP answers this with <strong>OAuth 2.1 + PKCE</strong>
   </p>
+
   <PNotes>
     <p>
-      stdio is inherently trusted — the host spawns the process itself. But a
-      remote HTTP server is exposed to the network, so the MCP spec requires
-      OAuth 2.1 with PKCE to authenticate clients properly.
+      stdio is inherently more controlled: the host starts a local process and
+      communicates with it directly. But a remote HTTP MCP server is exposed
+      over the network, so we need a standard way to authorize clients and
+      users.
+    </p>
+    <p>
+      MCP does not invent a custom auth mechanism here. It builds on OAuth 2.1,
+      PKCE, and standard OAuth metadata discovery.
     </p>
   </PNotes>
 </p-slide>
+
 <p-slide class="center">
   <h2 style="margin-block-end: 0.2rem;" class="cover-internal-sub-section-all">
-    HTTP - Authentication
+    HTTP Authentication
   </h2>
-  <h3 style="margin-block-start: 0.8rem;">OAuth 2.0 🔐</h3>
+  <h3 style="margin-block-start: 0.8rem;">OAuth 2.1 + PKCE 🔐</h3>
+
+  <PNotes>
+    <p>
+      For remote MCP servers, authorization is handled at the HTTP transport
+      layer. The MCP server behaves like a protected resource server. The OAuth
+      authorization server can be the same application, or an external identity
+      provider.
+    </p>
+  </PNotes>
 </p-slide>
+
 <p-slide>
   <h3 class="cover-internal-sub-section-all">
     What is PKCE - Proof Key for Code Exchange?
@@ -69,157 +86,255 @@ import PNotes from "../components/PNotes.astro";
     </p>
   </PNotes>
 </p-slide>
+
 <p-slide>
-  <h3 class="cover-internal-sub-section-all">The OAuth flow</h3>
-  <ul>
+  <h3 class="cover-internal-sub-section-all">The OAuth flow in MCP</h3>
+  <ul style="font-size: 0.9em">
     <li p-fragment p-effect="from left">
-      🔍 <span class="main-sub-gradient">1. Discovery</span> — client discovers the
-      OAuth metadata
+      🚪 <span class="main-sub-gradient">1. Unauthorized request</span> — client calls
+      the MCP endpoint without a token
     </li>
     <li p-fragment p-effect="from right">
-      👤 <span class="main-sub-gradient">2. Authorization</span> — user logs in and
+      🔍 <span class="main-sub-gradient">2. Resource discovery</span> — server points
+      to its protected resource metadata
+    </li>
+    <li p-fragment p-effect="from left">
+      🧭 <span class="main-sub-gradient">3. Auth server discovery</span> — client
+      finds authorization and token endpoints
+    </li>
+    <li p-fragment p-effect="from right">
+      👤 <span class="main-sub-gradient">4. Authorization</span> — user logs in and
       grants permission
     </li>
     <li p-fragment p-effect="from left">
-      🎫 <span class="main-sub-gradient">3. Token exchange</span> — client gets an
-      access token
+      🎫 <span class="main-sub-gradient">5. Token exchange</span> — client gets an
+      access token using PKCE
     </li>
     <li p-fragment p-effect="from right">
-      ✅ <span class="main-sub-gradient">4. Authenticated requests</span> — token
+      ✅ <span class="main-sub-gradient">6. Authenticated requests</span> — token
       sent as <code>Authorization: Bearer</code>
     </li>
   </ul>
+
   <PNotes>
     <p>
-      The MCP client kicks off the flow automatically if the server returns 401.
-      Discovery tells the client where to redirect the user for login and where
-      to exchange the code for a token.
+      The important MCP-specific part is the discovery chain. The client does
+      not start by guessing the authorization endpoint. First it discovers the
+      protected resource metadata for the MCP server.
+    </p>
+    <p>
+      That metadata tells the client which authorization server should be used.
+      Then the client reads the authorization server metadata to find the login
+      endpoint, token endpoint, supported PKCE methods, and so on.
     </p>
   </PNotes>
 </p-slide>
 
 <p-slide>
   <h3 style="margin-block-end: 1em;">
-    <span class="cover-internal-sub-section-all">Discovery endpoint</span> 🔍
+    <span class="cover-internal-sub-section-all">
+      1. Protected Resource Metadata
+    </span>
+    🔍
   </h3>
+
   <pre
     class="small-line"
-    data-label-file="/.well-known/oauth-authorization-server">
-<code style="font-size: 0.6em" is:raw class="language-javascript">
-    {
-        "issuer": "https://my-mcp-server.com",
-        "authorization_endpoint": "https://my-mcp-server.com/oauth/authorize",
-        "token_endpoint": "https://my-mcp-server.com/oauth/token",
-        "response_types_supported": ["code"],
-        "code_challenge_methods_supported": ["S256"]
+    data-label-file="/.well-known/oauth-protected-resource">
+  <code style="font-size: 0.6em" is:raw class="language-json">{
+      "resource": "https://my-mcp-server.com/mcp",
+      "authorization_servers": [
+        "https://auth.my-mcp-server.com"
+      ],
+      "scopes_supported": [
+        "orders:read",
+        "orders:write"
+      ],
+      "bearer_methods_supported": [
+        "header"
+      ]
     }</code>
   </pre>
+
   <PNotes>
     <p>
-      This is the metadata document the MCP client fetches first. It tells the
-      client where to send the user for login and where to exchange the
-      authorization code for a token. S256 is the PKCE method required by the
-      spec.
+      This is the MCP-specific discovery step. The MCP server is the protected
+      resource. It exposes metadata that tells the client which authorization
+      server can issue valid tokens for this resource.
+    </p>
+    <p>
+      The key field here is authorization_servers. It points to the OAuth
+      authorization server. This can be the same origin as the MCP server, or a
+      separate identity provider.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 style="margin-block-end: 1em;">
+    <span class="cover-internal-sub-section-all">
+      2. Authorization Server Metadata
+    </span>
+    🧭
+  </h3>
+
+  <pre
+    class="small-line"
+    data-label-file="https://auth.my-mcp-server.com/.well-known/oauth-authorization-server">
+<code style="font-size: 0.6em" is:raw class="language-json">
+  {
+    "issuer": "https://auth.my-mcp-server.com",
+    "authorization_endpoint": "https://auth.my-mcp-server.com/oauth/authorize",
+    "token_endpoint": "https://auth.my-mcp-server.com/oauth/token",
+    "registration_endpoint": "https://auth.my-mcp-server.com/oauth/register",
+    "response_types_supported": ["code"],
+    "code_challenge_methods_supported": ["S256"]
+  }</code>
+  </pre>
+
+  <PNotes>
+    <p>
+      This is standard OAuth authorization server metadata. Once the MCP client
+      knows which authorization server to use, it fetches this document to learn
+      where to redirect the user, where to exchange the authorization code, and
+      whether dynamic client registration is supported.
+    </p>
+    <p>
+      S256 is the PKCE method we care about. The client creates a code verifier,
+      sends the code challenge during authorization, and later proves possession
+      of the verifier during the token exchange.
     </p>
   </PNotes>
 </p-slide>
 
 <p-slide follow-fragments>
   <h3 style="margin-block-end: 0.6em;">
-    <span class="cover-internal-sub-section-all"
-      >Becoming an OAuth provider</span
-    > 🛡️
+    <span class="cover-internal-sub-section-all">
+      Becoming an OAuth provider
+    </span>
+    🛡️
   </h3>
+
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">    import { betterAuth } from "better-auth";
-    import { jwt } from "better-auth/plugins";
-    import { oauthProvider } from "@better-auth/oauth-provider";
+<code style="font-size: 0.6em" is:raw class="language-javascript">  import { betterAuth } from "better-auth";
+  import { jwt } from "better-auth/plugins";
+  import { oauthProvider } from "@better-auth/oauth-provider";
 
-    const auth = betterAuth({
-      baseURL: BASE_URL,
-      secret: process.env.BETTER_AUTH_SECRET,
-      disabledPaths: ["/token"],
-      plugins: [
-        </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">jwt({ disableSettingJwtHeader: true }),
-        oauthProvider({
-          loginPage: "/sign-in",
-          consentPage: "/consent",
-          allowDynamicClientRegistration: true,
-          allowUnauthenticatedClientRegistration: true,
-        }),
-      ],
-      socialProviders: {
-        github: {
-          clientId: process.env.GITHUB_ID,
-          clientSecret: process.env.GITHUB_SECRET,
-        },
+  const auth = betterAuth({
+    baseURL: AUTH_BASE_URL,
+    secret: process.env.BETTER_AUTH_SECRET,
+    disabledPaths: ["/token"],
+    plugins: [
+      </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">jwt({ disableSettingJwtHeader: true }),
+      oauthProvider({
+        loginPage: "/sign-in",
+        consentPage: "/consent",
+        allowDynamicClientRegistration: true,
+        allowUnauthenticatedClientRegistration: true,
+      }),
+    ],
+    socialProviders: {
+      github: {
+        clientId: process.env.GITHUB_ID,
+        clientSecret: process.env.GITHUB_SECRET,
       },
-    });</code></p-fragment></pre>
+    },
+  });</code></p-fragment></pre>
+
   <PNotes>
     <p>
-      oauthProvider (from @better-auth/oauth-provider) turns better-auth into an
-      OAuth 2.1 authorization server. The jwt plugin is required to sign access
-      tokens; disableSettingJwtHeader prevents the token from leaking into
-      normal responses. disabledPaths: ["/token"] disables the built-in
-      better-auth /token endpoint that would conflict with the provider's
-      /oauth2/token. allowUnauthenticatedClientRegistration lets MCP clients
-      register as public clients on the fly, with no pre-registration needed.
+      In this example, better-auth becomes the authorization server. It handles
+      login, consent, token issuance, and dynamic client registration.
+    </p>
+    <p>
+      The MCP server itself is still the protected resource. It does not need to
+      implement the whole OAuth flow manually. It only needs to advertise where
+      authorization happens and validate the access tokens it receives.
+    </p>
+    <p>
+      allowUnauthenticatedClientRegistration is useful for MCP clients because
+      they may need to register dynamically as public clients before starting
+      the authorization flow.
     </p>
   </PNotes>
 </p-slide>
 
 <p-slide follow-fragments>
   <h3 style="margin-block-end: 1em;">
-    <span class="cover-internal-sub-section-all">Protecting the endpoint</span> 🔒
+    <span class="cover-internal-sub-section-all">Protecting the endpoint</span>
+    🔒
   </h3>
+
   <pre
     class="small-line"
     data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">    import { verifyAccessToken } from "better-auth/oauth2";
-    import { toNodeHandler } from "better-auth/node";
+<code style="font-size: 0.6em" is:raw class="language-javascript">  import { verifyAccessToken } from "better-auth/oauth2";
+  import { toNodeHandler } from "better-auth/node";
 
-    const app = express();
-    app.all("/api/auth/*", toNodeHandler(auth));
-    app.use(express.json());
-    </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
+  const app = express();
+
+  app.all("/api/auth/*", toNodeHandler(auth));
+  app.use(express.json());
+
     app.post("/mcp", async (req, res) => {
-      const accessToken = req.headers.authorization?.slice(7);
+    const accessToken = req.headers.authorization?.replace(/^Bearer\s+/i, "");
 
-      try {
-        </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">await verifyAccessToken(accessToken, {
-          verifyOptions: { issuer: BASE_URL, audience: BASE_URL },
-        });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-      } catch {
-        </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">res.set("WWW-Authenticate",
-          `Bearer resource_metadata="${BASE_URL}/.well-known/oauth-protected-resource"`);
-        return res.status(401).json({ error: "unauthorized" });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-      }
+    </code><code style="font-size: 0.6em" is:raw class="language-javascript">try {
+      </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">await verifyAccessToken(accessToken, {
+        verifyOptions: {
+          issuer: AUTH_BASE_URL,
+          audience: MCP_RESOURCE_URL,
+        },
+      });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+    } catch {
+      </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">res.set(
+        "WWW-Authenticate",
+        `Bearer resource_metadata="${MCP_RESOURCE_URL}/.well-known/oauth-protected-resource"`
+      );
 
-      const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
-      const server = createServer();
-      await server.connect(transport);
-      await transport.handleRequest(req, res, req.body);
-    });</code></p-fragment>
-  </pre>
+      return res.status(401).json({ error: "unauthorized" });</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+    }
+
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+    });
+
+    const server = createServer();
+
+    await server.connect(transport);
+    await transport.handleRequest(req, res, req.body);
+  });</code>
+    </pre>
+
   <PNotes>
     <p>
-      verifyAccessToken (from better-auth/oauth2) validates the JWT locally:
-      signature against /api/auth/jwks, issuer, audience, expiry. Zero network
-      calls. If it fails, the 401 with WWW-Authenticate points to the
-      protected-resource metadata — that header is what triggers the OAuth flow
-      on the MCP client side.
+      The MCP endpoint is protected like any other resource server endpoint. It
+      expects a Bearer access token and validates issuer, audience, expiry, and
+      signature.
+    </p>
+    <p>
+      If validation fails, the server returns 401 and includes a
+      WWW-Authenticate header. The important part is resource_metadata: it tells
+      the MCP client where to find the protected resource metadata document.
+    </p>
+    <p>
+      From there, the client discovers the authorization server, performs the
+      OAuth flow with PKCE, obtains an access token, and retries the MCP
+      request.
     </p>
   </PNotes>
 </p-slide>
 
 <p-slide>
   <h3>
-    <span class="cover-internal-sub-section-all"
-      >Don't build it from scratch</span
-    > 🙏
+    <span class="cover-internal-sub-section-all">
+      Don't build OAuth from scratch
+    </span>
+    🙏
   </h3>
+
   <ul>
     <li p-fragment p-effect="zoom">
       📦 <span class="main-sub-gradient">@auth/core</span>
@@ -228,22 +343,33 @@ import PNotes from "../components/PNotes.astro";
       ⚡ <span class="main-sub-gradient">better-auth</span>
     </li>
     <li p-fragment p-effect="zoom">
-      ☁️ <span class="main-sub-gradient">Clerk / Auth0</span>
+      ☁️ <span class="main-sub-gradient">Clerk / Auth0 / Keycloak</span>
     </li>
     <li p-fragment p-effect="zoom">
-      👀 The MCP SDK now ships <span class="main-sub-gradient"
-        >built-in OAuth helpers</span
-      >
+      👀 MCP SDKs are adding <span class="main-sub-gradient">
+        auth and OAuth helpers
+      </span>
     </li>
   </ul>
+
   <PNotes>
     <p>
-      Implementing OAuth from scratch is error-prone. Use a battle-tested
-      library or a hosted provider. The MCP SDK team is also working on built-in
-      helpers to make this even simpler in the near future.
+      Implementing OAuth from scratch is easy to get wrong. Use a library or a
+      hosted provider whenever possible.
+    </p>
+    <p>
+      The MCP-specific part is not “invent OAuth again”. It is wiring standard
+      OAuth discovery, protected resource metadata, token validation, and the
+      MCP transport together.
+    </p>
+    <p>
+      Also, check the exact SDK and version you are using. OAuth helper support
+      is evolving quickly, so avoid promising that every SDK version already has
+      everything built in.
     </p>
   </PNotes>
 </p-slide>
+
 <style lang="scss">
   ul {
     li[p-fragment]:not(:last-of-type) {
