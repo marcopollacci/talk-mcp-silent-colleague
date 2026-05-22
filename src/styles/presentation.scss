@@ -685,3 +685,26 @@ body[coming-soon] .coming-soon {
 li {
   font-size: 0.8em;
 }
+
+.tk-kw {
+  color: oklch(0.78 0.18 320);
+}
+.tk-str {
+  color: oklch(0.78 0.16 80);
+}
+.tk-num {
+  color: oklch(0.78 0.18 50);
+}
+.tk-fn {
+  color: oklch(0.78 0.14 200);
+}
+.tk-cmt {
+  color: var(--ink-mute);
+  font-style: italic;
+}
+.tk-pun {
+  color: var(--ink-mute);
+}
+.tk-tag {
+  color: oklch(0.78 0.16 350);
+}

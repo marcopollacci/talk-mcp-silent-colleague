@@ -337,13 +337,16 @@ import PNotes from "../components/PNotes.astro";
 
   <ul>
     <li p-fragment p-effect="zoom">
-      📦 <span class="main-sub-gradient">@auth/core</span>
+      📦 <span class="main-sub-gradient">Pick an auth layer</span>
+      <span class="item-sub"
+        ><code>@auth/core</code> / <code>better-auth</code></span
+      >
     </li>
     <li p-fragment p-effect="zoom">
-      ⚡ <span class="main-sub-gradient">better-auth</span>
-    </li>
-    <li p-fragment p-effect="zoom">
-      ☁️ <span class="main-sub-gradient">Clerk / Auth0 / Keycloak</span>
+      ☁️ <span class="main-sub-gradient">Or use an identity provider</span>
+      <span class="item-sub"
+        ><code>Clerk</code> / <code>Auth0</code> / <code>Keycloak</code></span
+      >
     </li>
     <li p-fragment p-effect="zoom">
       👀 MCP SDKs are adding <span class="main-sub-gradient">
@@ -373,7 +376,21 @@ import PNotes from "../components/PNotes.astro";
 <style lang="scss">
   ul {
     li[p-fragment]:not(:last-of-type) {
-      margin-block-end: 0.55em;
+      margin-block-end: 0.75em;
+    }
+  }
+
+  .item-sub {
+    display: block;
+    font-size: 0.72em;
+    font-style: italic;
+    color: #484848;
+    margin-inline-start: 1.5em;
+    margin-block-start: 0.2em;
+
+    code {
+      font-style: normal;
+      font-size: 0.95em;
     }
   }
 </style>
