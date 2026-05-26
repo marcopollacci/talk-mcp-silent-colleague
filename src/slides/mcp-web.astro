@@ -78,13 +78,17 @@ import PNotes from "../components/PNotes.astro";
   <pre
     class="small-line"
     data-label-file="search-form.html">
-<code is:raw class="language-html">
+<code style="font-size: 0.6em" is:raw class="language-html">
     &lt;form
       toolname="search-products"
       tooldescription="Search the product catalog by keyword"
       action="/search"
     &gt;
-    &lt;!-- some beautiful input --&gt;
+      &lt;input
+        name="query"
+        type="text"
+        toolparamdescription="Search term to filter products"
+      /&gt;
     &lt;/form&gt;
 </code>
   </pre>
