@@ -16,7 +16,7 @@ import PNotes from "../components/PNotes.astro";
     p-effect="zoom fade"
     style="font-size: 0.6em; margin-block-start: 1em; opacity: 0.7;"
   >
-    MCP answers this with <strong>OAuth 2.1 + PKCE</strong>
+    MCP answers this with <strong>OAuth 2.1</strong>
   </p>
 
   <PNotes>
@@ -27,8 +27,8 @@ import PNotes from "../components/PNotes.astro";
       users.
     </p>
     <p>
-      MCP does not invent a custom auth mechanism here. It builds on OAuth 2.1,
-      PKCE, and standard OAuth metadata discovery.
+      MCP does not invent a custom auth mechanism here. It builds on OAuth 2.1
+      and standard OAuth metadata discovery.
     </p>
   </PNotes>
 </p-slide>
@@ -37,7 +37,7 @@ import PNotes from "../components/PNotes.astro";
   <h2 style="margin-block-end: 0.2rem;" class="cover-internal-sub-section-all">
     HTTP Authentication
   </h2>
-  <h3 style="margin-block-start: 0.8rem;">OAuth 2.1 + PKCE 🔐</h3>
+  <h3 style="margin-block-start: 0.8rem;">OAuth 2.1 🔐</h3>
 
   <PNotes>
     <p>
@@ -45,44 +45,6 @@ import PNotes from "../components/PNotes.astro";
       layer. The MCP server behaves like a protected resource server. The OAuth
       authorization server can be the same application, or an external identity
       provider.
-    </p>
-  </PNotes>
-</p-slide>
-
-<p-slide>
-  <h3 class="cover-internal-sub-section-all">
-    What is PKCE - Proof Key for Code Exchange?
-  </h3>
-  <ul>
-    <li p-fragment p-effect="from left">
-      🧪 Client creates a random <code>code_verifier</code>
-    </li>
-    <li p-fragment p-effect="from right">
-      🧬 Sends only a hashed <code>code_challenge</code> during login
-    </li>
-    <li p-fragment p-effect="from left">
-      🎫 Sends the original <code>code_verifier</code> when exchanging the code
-    </li>
-    <li p-fragment p-effect="zoom">
-      🛡️ Prevents stolen authorization codes from being reused
-    </li>
-  </ul>
-
-  <PNotes>
-    <p>
-      PKCE is an extension to the OAuth Authorization Code flow. The client
-      starts by generating a random secret called code_verifier. Instead of
-      sending the secret directly, it sends a hashed version called
-      code_challenge.
-    </p>
-    <p>
-      Later, when the client exchanges the authorization code for an access
-      token, it must send the original code_verifier. The authorization server
-      hashes it again and checks that it matches the original challenge.
-    </p>
-    <p>
-      This means that stealing the authorization code is not enough to obtain an
-      access token. Without the original verifier, the token exchange fails.
     </p>
   </PNotes>
 </p-slide>
