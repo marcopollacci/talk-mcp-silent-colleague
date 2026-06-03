@@ -1,0 +1,72 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="center">
+  <h1><span class="main-gradient">Testing your server</span> 🔍</h1>
+</p-slide>
+
+<p-slide>
+  <h2 class="main-gradient">MCP Inspector</h2>
+  <ul>
+    <li p-fragment p-effect="from left">
+      🛠️ The <span class="main-sub-gradient">official tool</span> by Anthropic — built
+      alongside the protocol
+    </li>
+    <li p-fragment p-effect="from right">
+      📮 A <span class="main-sub-gradient">"Postman for MCP"</span> — call tools,
+      read resources, get prompts
+    </li>
+    <li p-fragment p-effect="from left">
+      🔌 Works with <span class="main-sub-gradient"
+        >stdio, SSE and streamable HTTP</span
+      >
+    </li>
+    <li p-fragment p-effect="zoom">
+      📡 Real-time logs and <span class="main-sub-gradient"
+        >protocol validation</span
+      >
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      The MCP Inspector is the official tool from Anthropic, built alongside the
+      protocol itself. It acts like Postman for MCP: you connect to your server,
+      see the tools it exposes, and call them to inspect the raw JSON responses.
+      It supports every transport we covered.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">MCP Inspector</span> — zero install 🚀
+  </h5>
+  <pre
+    class="small-line"
+    data-label-file="terminal">
+<code is:raw class="language-javascript">
+  # stdio server
+  npx @modelcontextprotocol/inspector node server.js
+
+  # remote / HTTP server
+  npx @modelcontextprotocol/inspector
+  # then paste your URL: http://localhost:3000/mcp
+</code>
+  </pre>
+  <PNotes>
+    <p>
+      No installation needed — it runs directly through npx. For a stdio server
+      you pass the command to launch it. For an HTTP server you just run the
+      inspector and paste the server URL in the web UI. Then you get an
+      interactive interface to list and call tools.
+    </p>
+  </PNotes>
+</p-slide>
+<style lang="scss">
+  ul {
+    li {
+      margin-bottom: 1em;
+    }
+  }
+</style>
