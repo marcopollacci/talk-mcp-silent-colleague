@@ -9,6 +9,7 @@ Built on top of [P-Slides](https://github.com/MaxArt2501/p-slides)!
 # Url Slide
 
 - [27/05/2026 - BolognaJS May Meetup](https://talk-mcp-silent-colleague.marcotalk.dev/bologna-js/)
+- [04/10/2026 - DevFest Modena 2026](https://talk-mcp-silent-colleague.marcotalk.dev/devfest-modena-2026/)
 
 ## Building
 

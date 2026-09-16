@@ -1,0 +1,57 @@
+---
+import favicon from "../img/bolognajs_favicon.png";
+import qrLinkRating from "../img/qrcode_bolognajs_rating.png";
+import qrLinkTalk from "../img/qrcode_bolognajs_talk.png";
+import Layout from "../layouts/Layout.astro";
+import BolognaJsTalks from "../slides/bolognajs-talks.astro";
+import CoverDfm2026 from "../slides/cover-dfm2026.astro";
+import Cover from "../slides/cover.astro";
+import Intro from "../slides/intro.astro";
+import McpArchitecture from "../slides/mcp-architecture.astro";
+import McpHttpOauth2 from "../slides/mcp-http-oauth2.astro";
+import McpHttp from "../slides/mcp-http.astro";
+import McpOutro from "../slides/mcp-outro.astro";
+import McpStdio from "../slides/mcp-stdio.astro";
+import McpStructure from "../slides/mcp-structure.astro";
+import McpTest from "../slides/mcp-test.astro";
+import McpUseCase from "../slides/mcp-use-case.astro";
+import McpWeb2 from "../slides/mcp-web-2.0.astro";
+import Questions from "../slides/questions.astro";
+import Repo from "../slides/repo.astro";
+import Thanks from "../slides/thanks.astro";
+const favIcon = favicon.src;
+const canRender = import.meta.env.DEV || new Date("2026-10-04") < new Date();
+const metaData = {
+  title: "MCP: the silent colleague connecting your services to the AI",
+  description: "Talk di Marco Pollacci",
+  image: "og-image.png",
+  site: "https://talk-mcp-silent-colleague.marcotalk.dev/devfest-modena-2026/",
+};
+---
+
+<Layout {canRender} {favIcon} {metaData}>
+  <CoverDfm2026 />
+  {canRender && (
+    <>
+      <Cover />
+      <BolognaJsTalks />
+      <Intro />
+      <McpStructure />
+      <McpArchitecture />
+      <McpStdio />
+      <McpHttp />
+      <McpHttpOauth2 />
+      <McpTest />
+      <McpUseCase />
+      <McpWeb2 />
+      <McpOutro />
+      <Thanks
+        {qrLinkRating}
+        qrLink={qrLinkTalk}
+        urlLink={metaData.site}
+        RepoSlide={Repo}
+        QuestionsSlide={Questions}
+      />
+    </>
+  )}
+</Layout>
