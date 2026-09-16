@@ -1,9 +1,9 @@
 ---
-import favicon from "../img/bolognajs_favicon.png";
+import favicon from "../img/dfm2026_favicon.png";
+import me2 from "../img/me2.png";
 import qrLinkRating from "../img/qrcode_bolognajs_rating.png";
 import qrLinkTalk from "../img/qrcode_bolognajs_talk.png";
 import Layout from "../layouts/Layout.astro";
-import BolognaJsTalks from "../slides/bolognajs-talks.astro";
 import CoverDfm2026 from "../slides/cover-dfm2026.astro";
 import Cover from "../slides/cover.astro";
 import Intro from "../slides/intro.astro";
@@ -33,8 +33,7 @@ const metaData = {
   <CoverDfm2026 />
   {canRender && (
     <>
-      <Cover />
-      <BolognaJsTalks />
+      <Cover meReloaded={me2} />
       <Intro />
       <McpStructure />
       <McpArchitecture />
@@ -48,6 +47,7 @@ const metaData = {
       <Thanks
         {qrLinkRating}
         qrLink={qrLinkTalk}
+        meReloaded={me2}
         urlLink={metaData.site}
         RepoSlide={Repo}
         QuestionsSlide={Questions}

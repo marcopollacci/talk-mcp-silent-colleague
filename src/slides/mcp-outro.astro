@@ -16,21 +16,21 @@ import recap from "../img/recap-time-it.jpg";
 <p-slide>
   <ul>
     <li style="margin-block-end: 0.55em;">
-      🤝 <span class="main-sub-gradient">MCP</span> — a standard protocol to connect
-      LLMs with tools, resources and prompts
+      🤝 <span class="main-sub-gradient">MCP</span> — a standard protocol to
+      connect LLMs with tools, resources and prompts
     </li>
 
     <li p-fragment p-effect="from left">
-      🖥️ <span class="main-sub-gradient">stdio</span> — local process, zero config,
-      ideal for CLI tools and editor plugins
+      🖥️ <span class="main-sub-gradient">stdio</span> — local process, zero
+      config, ideal for CLI tools and editor plugins
     </li>
     <li p-fragment p-effect="from right">
-      🌐 <span class="main-sub-gradient">HTTP</span> — remote service, multiple clients,
-      deployable anywhere
+      🌐 <span class="main-sub-gradient">HTTP</span> — remote service, multiple
+      clients, deployable anywhere
     </li>
     <li p-fragment p-effect="from below">
-      🔐 <span class="main-sub-gradient">OAuth 2.1</span> — required for public servers,
-      use better-auth to avoid reinventing the wheel
+      🔐 <span class="main-sub-gradient">OAuth 2.1</span> — required for public
+      servers, use better-auth to avoid reinventing the wheel
     </li>
   </ul>
   <PNotes>
@@ -62,7 +62,9 @@ import recap from "../img/recap-time-it.jpg";
 
     <div p-effect="from right">
       <p style="font-size: 0.8em; margin: 0;">🌐</p>
-      <h4 class="main-sub-gradient" style="margin-block: 0.3em 0.6em;">HTTP</h4>
+      <h4 class="main-sub-gradient" style="margin-block: 0.3em 0.6em;">
+        HTTP
+      </h4>
       <ul style="font-size: 0.5em;">
         <li>📌 Remote service</li>
         <li>📌 Multiple clients</li>
@@ -98,5 +100,8 @@ import recap from "../img/recap-time-it.jpg";
     border: 2px solid #f97316;
     border-radius: 0.5em;
     padding: 1.2em;
+  }
+  :global(html:not([data-theme="classic"])) div[p-effect~="from"] {
+    border-color: var(--accent);
   }
 </style>
