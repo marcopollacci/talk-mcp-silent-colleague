@@ -1,0 +1,123 @@
+// "Modern" event theme hook: a page-level opt-out for the visual refresh.
+// bologna-js passes theme="classic" from Layout.astro and keeps the
+// original look untouched; every other page gets html:not([data-theme="classic"]).
+
+html:not([data-theme="classic"]) {
+  // Tokens -------------------------------------------------------------
+  --ink: oklch(0.24 0.02 250);
+  --ink-mute: oklch(0.56 0.02 250);
+
+  --slide-surface: oklch(0.983 0.005 240);
+  --surface-card: oklch(0.965 0.008 240);
+  --surface-border: oklch(0.88 0.012 240);
+  --shadow-color: oklch(0.4 0.03 250 / 12%);
+
+  --radius-sm: 0.4em;
+  --radius-md: 0.9em;
+
+  // Cool blue → teal accent family: same hue swing as the main pair, just
+  // lighter, so the sweep still reads on short text instead of flattening
+  // into a single flat color.
+  --accent: oklch(0.58 0.15 240);
+  --accent-soft: oklch(0.6 0.12 195);
+  --accent-sub-a: oklch(0.64 0.13 225);
+  --accent-sub-b: oklch(0.68 0.11 175);
+
+  // Re-route the shared brand/gradient tokens the whole deck already reads
+  // through var() — this alone removes the pink from every .main-gradient
+  // and .current-gradient heading, deck-wide, without touching shared files.
+  --brand-color: var(--accent);
+  --starting-point-gradient: var(--accent);
+  --ending-point-gradient: var(--accent-soft);
+
+  color: var(--ink);
+
+  // .main-sub-gradient / .text-sub-section / .text-cover hardcode their own
+  // pink→blue or pink→orange gradient instead of reading a token, and
+  // .cover-internal-sub-section / .cover-internal-sub-section-all /
+  // .cover-subSection set local --starting/--ending-point-gradient vars via
+  // Sass @extend — all need an explicit override here since a root-level var
+  // redefinition can't reach them.
+  .main-sub-gradient,
+  .text-sub-section,
+  .text-cover {
+    background: linear-gradient(
+      90deg,
+      var(--accent-sub-a),
+      var(--accent-sub-b)
+    );
+    background-clip: text;
+  }
+
+  .cover-internal-sub-section-all,
+  .cover-internal-sub-section h1,
+  .cover-internal-sub-section h2,
+  .cover-internal-sub-section h3,
+  .cover-internal-sub-section h4,
+  .cover-internal-sub-section h5,
+  .cover-internal-sub-section h6,
+  .cover-subSection h1 {
+    --starting-point-gradient: var(--accent-sub-a);
+    --ending-point-gradient: var(--accent-sub-b);
+  }
+
+  // Background -----------------------------------------------------------
+  // p-slide's own background-color is what src/js/main.js mirrors onto the
+  // deck for the cross-slide transition, so overriding it here is enough.
+  p-slide {
+    background-color: var(--slide-surface);
+  }
+
+  // Lists ------------------------------------------------------------
+  li {
+    line-height: 1.5;
+    margin-block-end: 0.35em;
+  }
+
+  // Div components -----------------------------------------------------
+  .our-header {
+    border-left-color: var(--accent);
+    background: var(--surface-card);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .blockquote {
+    blockquote {
+      background: var(--surface-card);
+      border-radius: var(--radius-md);
+
+      &:before,
+      &:after {
+        color: var(--accent-soft);
+      }
+    }
+
+    cite {
+      color: var(--ink-mute);
+    }
+  }
+
+  .special-file {
+    border-color: var(--surface-border);
+    background: var(--surface-card);
+    box-shadow: 0 0.15em 0.5em var(--shadow-color);
+  }
+
+  pre[data-label-file] {
+    border-color: var(--surface-border);
+    box-shadow: 0 0.25em 0.75em var(--shadow-color);
+
+    &::before {
+      background: var(--surface-card);
+      border-color: var(--surface-border);
+      color: var(--ink-mute);
+    }
+  }
+
+  .support-table {
+    th,
+    td {
+      border-color: var(--surface-border);
+    }
+  }
+}

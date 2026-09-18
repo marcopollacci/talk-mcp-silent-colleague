@@ -7,7 +7,7 @@ import { Image } from "astro:assets";
 import { Font } from "astro:assets";
 import comingSoon from "../img/coming-soon.png";
 import Seo from "../components/Seo.astro";
-const { canRender, favIcon, metaData } = Astro.props;
+const { canRender, favIcon, metaData, theme = "modern" } = Astro.props;
 const bodyAttributes = canRender ? undefined : "coming-soon";
 const fontsToPreload = [
   "--talk-marco-graphik-semibold",
@@ -17,7 +17,7 @@ const fontsToPreload = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme={theme}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />

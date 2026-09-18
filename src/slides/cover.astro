@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import fourtyFactory from "../img/40factory.svg";
 import me from "../img/me.png";
-import qrLink from "../img/qr_link.svg";
+import qrLink from "../img/qr_link.svg?raw";
 const { meReloaded } = Astro.props;
 ---
 
@@ -30,10 +30,11 @@ const { meReloaded } = Astro.props;
       />
     </div>
   </p-note>
-  <Image
-    style="--image-start-size: 10.5em"
+  <div
+    role="img"
+    aria-label="qr"
     class="alter-image-size"
-    src={qrLink}
-    alt="qr"
+    style="--image-start-size: 10.5em; --image-width-size: 10.5em"
+    set:html={qrLink}
   />
 </p-slide>

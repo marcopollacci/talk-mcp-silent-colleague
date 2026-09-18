@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev:bologna-js": "astro dev --open /bologna-js/",
+    "dev:dfm2026": "astro dev --open /devfest-modena-2026/",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

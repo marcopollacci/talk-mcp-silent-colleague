@@ -1,0 +1,90 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="cover-internal-sub-section">
+  <h2>HTTP</h2>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Project setup</h3>
+  <pre class="small-line" data-label-file="package.json">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
+    {
+      "name": "http",
+      "type": "module",
+      "scripts": {
+        "start": "node server.js"
+      },
+      "dependencies": {
+        "@modelcontextprotocol/server": "^2.0.0",
+        "@modelcontextprotocol/express": "^2.0.0",
+        "@modelcontextprotocol/node": "^2.0.0",
+        "express": "^5.0.0",
+        "zod": "^4.0.0"
+      }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Same as stdio, plus Express and two small adapters: the Express
+      integration and the Node.js request handler bridge. Streamable HTTP
+      support lives in the server package itself.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide follow-fragments>
+  <h3 class="cover-internal-sub-section-all">Creating the server</h3>
+  <pre class="small-line" data-label-file="server.js">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
+    import { createMcpHandler } from "@modelcontextprotocol/server";
+    import { createMcpExpressApp } from "@modelcontextprotocol/express";
+    import { toNodeHandler } from "@modelcontextprotocol/node";
+    // createServer() — same factory as stdio
+    </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">
+    const handler = </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">createMcpHandler(createServer);</code>
+<code style="font-size: 0.6em" is:raw class="language-javascript">    const node = toNodeHandler(handler);
+
+    const app = createMcpExpressApp();
+    app.all("/mcp", (req, res) => node(req, res, req.body));
+
+    app.listen(3000);</code></p-fragment></pre>
+  <PNotes>
+    <p>
+      The tool registration is identical to stdio — we reuse the exact same
+      createServer factory. Tools are transport-agnostic.
+    </p>
+    <p>
+      createMcpHandler turns the factory into a Streamable HTTP handler. Since
+      the 2026-07-28 spec MCP is stateless: no initialize handshake, no session
+      ID, every request carries its own protocol version. That means any
+      instance behind a plain round-robin load balancer can answer.
+    </p>
+    <p>
+      Older 2025-era clients are still served by default, statelessly, from the
+      same factory — so upgrading the server doesn't break existing clients.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Connecting a client</h3>
+  <pre class="small-line" data-label-file="mcp.json">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
+    {
+      "mcpServers": {
+        "my-http-mcp-server": {
+          "type": "http",
+          "url": "http://localhost:3000/mcp"
+        }
+      }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Instead of a command and a path, the client just needs a URL. The server
+      can run anywhere — locally, on a VPS, or on a cloud platform.
+    </p>
+  </PNotes>
+</p-slide>
