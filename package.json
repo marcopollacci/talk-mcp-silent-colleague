@@ -13,14 +13,14 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "astro": "^7.3.2",
+    "astro": "^7.3.3",
     "p-slides": "^1.6.0"
   },
   "devDependencies": {
-    "@types/node": "^26.6.0",
+    "@types/node": "^26.6.1",
     "husky": "^9.1.7",
-    "prettier": "^3.9.6",
-    "prettier-plugin-astro": "^1.0.0",
+    "prettier": "^3.9.7",
+    "prettier-plugin-astro": "^1.0.1",
     "sass": "^1.104.1",
     "sharp": "^0.35.4",
     "vite-plugin-static-copy": "^4.1.1"
