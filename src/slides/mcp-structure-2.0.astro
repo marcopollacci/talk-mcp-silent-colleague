@@ -1,0 +1,470 @@
+---
+import { Image } from "astro:assets";
+import PNotes from "../components/PNotes.astro";
+import underTheHood from "../img/under-the-hood.webp";
+---
+
+<p-slide class="center" autoplay timing="550">
+  <h1 class="main-gradient">MCP under the hood</h1>
+  <p-fragment>
+    <Image
+      src={underTheHood}
+      alt="MCP under the hood"
+      class="alter-image-size"
+      style="border-radius: 8px; border: 1px solid"
+    />
+  </p-fragment>
+</p-slide>
+<p-slide class="center">
+  <h2 class="main-sub-gradient">JSON-RPC</h2>
+  <PNotes>
+    <p>
+      JSON-RPC is a lightweight protocol for calling functions on another system
+      using JSON messages. It allows MCP to send requests to connected services
+      and receive responses in a standardized format, making it easier to
+      integrate with a wide variety of APIs and systems.
+    </p>
+    <p>
+      MCP uses JSON-RPC as the communication protocol between the AI and the
+      connected services. JSON-RPC is a simple, stateless, and lightweight
+      remote procedure call (RPC) protocol that uses JSON as its data format.
+    </p>
+
+    <p>
+      This choice allows MCP to be flexible and compatible with a wide range of
+      services and programming languages, as JSON is widely supported and easy
+      to work with.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">JSON-RPC - request</span> 🔧
+  </h5>
+  <pre class="small-line" data-label-file="example-request.json">
+<code style="line-height: 1.2; font-size: 0.8em" is:raw class="language-javascript">
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "tools/call",
+      "params": {
+        "name": "getOrders",
+        "arguments": {
+          "customerId": "123"
+        },
+        "_meta": {
+          "io.modelcontextprotocol/protocolVersion": "2026-07-28"
+        }
+      }
+    }</code>
+   </pre>
+  <PNotes>
+    <p>
+      Since the 2026-07-28 spec there is no initialize handshake anymore: every
+      request carries its protocol version (and client capabilities) in _meta.
+      That's what makes MCP stateless. In the next examples I'll omit _meta to
+      keep them readable.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">JSON-RPC - response</span> 🔧
+  </h5>
+  <pre class="small-line" data-label-file="example-response.json">
+<code style="line-height: 1.2" is:raw class="language-javascript">
+    {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "result": {
+        "resultType": "complete",
+        "content": [
+          {
+            "type": "text",
+            "text": "Found 3 pending orders."
+          }
+        ]
+      }
+    }</code>
+   </pre>
+</p-slide>
+<p-slide>
+  <h2 class="main-gradient">Why does this matter?</h2>
+
+  <ul>
+    <li p-fragment p-effect="from left">
+      📌 Messages are <span class="main-sub-gradient">structured</span>
+    </li>
+    <li p-fragment p-effect="from right">
+      📌 Inputs can be <span class="main-sub-gradient">validated</span>
+    </li>
+    <li p-fragment p-effect="from left">
+      📌 Errors are <span class="main-sub-gradient">predictable</span>
+    </li>
+    <li p-fragment p-effect="from right">
+      📌 Integrations are <span class="main-sub-gradient">simpler</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      📌 Development is <span class="main-sub-gradient">faster</span>
+    </li>
+  </ul>
+</p-slide>
+<p-slide class="center">
+  <h2 class="main-gradient">Capabilities</h2>
+  <span style="font-size: 3em">🤹</span>
+  <PNotes>
+    <p>
+      MCP provides a set of capabilities that allow AI models to interact with
+      external systems in a structured and predictable way. These capabilities
+      include:
+    </p>
+    <p>
+      These three server features are the stable core. On the client side,
+      Roots, Sampling and Logging were deprecated in the 2026-07-28 spec, while
+      richer features — interactive UIs (MCP Apps) and long-running Tasks — now
+      ship as official extensions on top of the core protocol.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide data-capabilities autoplay timing="700">
+  <p-fragment p-effect="zoom" timing-start="700">
+    <p style="font-size: 1.5em;">🧰 Tools</p>
+  </p-fragment>
+  <p-fragment p-effect="zoom" timing-start="1100">
+    <p style="font-size: 1.5em;">📦 Resources</p>
+  </p-fragment>
+  <p-fragment p-effect="insert" timing-start="1500">
+    <p style="font-size: 1.5em;">💬 Prompts</p>
+  </p-fragment>
+</p-slide>
+<p-slide>
+  <h2>
+    🧰 <span class="main-gradient">Tools</span>
+  </h2>
+  <ul
+    style="
+    display: flex;
+    flex-direction: column;
+"
+  >
+    <li p-fragment p-effect="from right">
+      ✍🏻 Functions that the AI can <span class="main-sub-gradient">invoke</span>{" "}
+      on a connected server
+    </li>
+    <li p-fragment p-effect="from left">
+      📝 Each tool exposes a <span class="main-sub-gradient">name</span>, a{" "}
+      <span class="main-sub-gradient">description</span> and an{" "}
+      <span class="main-sub-gradient">input schema</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      🏆 Results are returned as{" "}
+      <span class="main-sub-gradient">structured content</span>
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      Tools are the most commonly used MCP capability. They let the AI model
+      call functions defined on the server — for example, fetching data,
+      triggering actions, or querying external APIs. The server declares each
+      tool with a name, a human-readable description, and a JSON Schema that
+      defines the expected input. The model reads these declarations and decides
+      on its own when it makes sense to call a tool and with which arguments.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Tools - definition</span> 🧰
+  </h5>
+  <pre class="small-line" data-label-file="server.ts">
+<code style="font-size: 0.8em;" is:raw class="language-typescript">
+  server.registerTool(
+    "getOrders",
+    {
+      description: "Returns pending orders for a customer",
+      inputSchema: z.object({ customerId: z.string() }),
+    },
+    async ({ customerId }) => ({
+      content: [
+        { type: "text", text: `Found 3 pending orders.` }
+      ],
+    })
+  );</code>
+  </pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Tools - call</span> 🧰
+  </h5>
+  <pre
+    class="small-line"
+    style="line-height: 1.2"
+    data-label-file="tool-call.json"
+  >
+<code is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/call",
+    "params": {
+      "name": "getOrders",
+      "arguments": {
+        "customerId": "123"
+      }
+    }
+}</code></pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Tools - response</span> 🧰
+  </h5>
+  <pre class="small-line" data-label-file="tool-response.json">
+<code style="line-height: 1.2" is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 2,
+    "result": {
+      "resultType": "complete",
+      "content": [
+        {
+          "type": "text",
+          "text": "Found 3 pending orders."
+        }
+      ]
+    }
+  }</code></pre>
+</p-slide>
+<p-slide>
+  <h2>
+    📦 <span class="main-gradient">Resources</span>
+  </h2>
+  <ul
+    style="
+    display: flex;
+    flex-direction: column;
+"
+  >
+    <li p-fragment p-effect="from left">
+      🗂️ Read-only data the server exposes for the AI to{" "}
+      <span class="main-sub-gradient">read</span>
+    </li>
+    <li p-fragment p-effect="zoom">
+      🔗 Each resource has a <span class="main-sub-gradient">URI</span>, a{" "}
+      <span class="main-sub-gradient">name</span> and an optional{" "}
+      <span class="main-sub-gradient">MIME type</span>
+    </li>
+    <li p-fragment p-effect="from right">
+      📄 Content is returned as{" "}
+      <span class="main-sub-gradient">text or binary</span>
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      Resources are the MCP way to expose data sources to the AI model. Unlike
+      tools, resources are read-only — the server declares them and the AI can
+      request their content. A resource is identified by a URI (e.g.
+      orders://pending) and can return text or binary content along with a MIME
+      type. Resources are ideal for exposing documents, database records, or any
+      static or semi-static data the model needs to reason about.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Resources - definition</span> 📦
+  </h5>
+  <pre class="small-line" data-label-file="server.ts">
+<code style="line-height: 1.2; font-size: 0.8em;" is:raw class="language-typescript">
+  server.registerResource(
+    "pending-orders",
+    "orders://pending",
+    {
+      description: "Returns the list of pending orders",
+      mimeType: "text/plain",
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "text/plain",
+          text: "Order #1\nOrder #2\nOrder #3",
+        },
+      ],
+    })
+  );</code></pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Resources - read</span> 📦
+  </h5>
+  <pre
+    class="small-line"
+    style="line-height: 1.2"
+    data-label-file="resource-read.json"
+  >
+<code is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "method": "resources/read",
+    "params": {
+      "uri": "orders://pending"
+    }
+  }
+</code>
+</pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Resources - response</span> 📦
+  </h5>
+  <pre class="small-line" data-label-file="resource-response.json">
+<code style="line-height: 1.2" is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 3,
+    "result": {
+      "resultType": "complete",
+      "ttlMs": 60000,
+      "cacheScope": "private",
+      "contents": [
+        {
+          "uri": "orders://pending",
+          "mimeType": "text/plain",
+          "text": "Order #1\nOrder #2\nOrder #3"
+        }
+      ]
+    }
+  }</code></pre>
+  <PNotes>
+    <p>
+      New in 2026-07-28: list and read results are cacheable. ttlMs tells the
+      client how long the answer stays fresh, cacheScope whether shared
+      intermediaries may cache it — less polling, better prompt-cache hits.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h2>
+    💬 <span class="main-gradient">Prompts</span>
+  </h2>
+  <ul
+    style="
+    display: flex;
+    flex-direction: column;
+"
+  >
+    <li p-fragment p-effect="zoom">
+      📋 Pre-defined message templates the server{" "}
+      <span class="main-sub-gradient">exposes</span> to clients
+    </li>
+    <li p-fragment p-effect="from right">
+      🔧 They accept <span class="main-sub-gradient">arguments</span> to
+      generate dynamic messages
+    </li>
+    <li p-fragment p-effect="from left">
+      🏆 Results are returned as{" "}
+      <span class="main-sub-gradient">structured content</span>
+    </li>
+  </ul>
+  <PNotes>
+    <p>
+      Prompts are reusable message templates declared by the server. Unlike
+      tools — which the AI calls autonomously — prompts are surfaced to the
+      client or user interface, which can then inject them into the
+      conversation. Each prompt can accept arguments to produce dynamic,
+      parameterized messages.
+    </p>
+  </PNotes>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Prompts - definition</span> 💬
+  </h5>
+  <pre class="small-line" data-label-file="server.ts">
+<code style="line-height: 1.2; font-size: 0.65em" is:raw class="language-typescript">  server.registerPrompt(
+    "customer-support",
+    {
+      description: "Generates a support context for a customer",
+      argsSchema: z.object({ customerId: z.string() }),
+    },
+    async ({ customerId }) => ({
+      messages: [{
+        role: "user",
+        content: {
+          type: "text",
+          text: `Customer ${customerId} needs help.Use the available
+                 customer/order tools if needed,
+                 then suggest next steps.`,
+        },
+      }],
+    })
+  );</code></pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Prompts - get</span> 💬
+  </h5>
+  <pre
+    class="small-line"
+    style="line-height: 1.2"
+    data-label-file="prompt-get.json"
+  >
+<code is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 4,
+    "method": "prompts/get",
+    "params": {
+      "name": "customer-support",
+      "arguments": {
+        "customerId": "123"
+      }
+    }
+  }</code>
+</pre>
+</p-slide>
+
+<p-slide>
+  <h5 style="margin-block-end: 1em" class="center">
+    <span class="main-gradient">Prompts - response</span> 💬
+  </h5>
+  <pre class="small-line" data-label-file="prompt-response.json">
+<code style="line-height: 1.2; font-size: 0.8em" is:raw class="language-javascript">
+  {
+    "jsonrpc": "2.0",
+    "id": 4,
+    "result": {
+      "resultType": "complete",
+      "messages": [{
+        "role": "user",
+        "content": {
+          "type": "text",
+          "text": "Customer 123 needs help.\nUse the available customer/order tools if needed,
+                   then suggest next steps."
+        }
+      }]
+    }
+  }</code></pre>
+</p-slide>
+
+<style lang="scss">
+  [data-capabilities] p {
+    font-size: 4.5rem;
+    margin-block: 0.5em;
+  }
+  ul {
+    li:nth-child(n + 2) {
+      margin-block-start: 0.5em;
+    }
+  }
+</style>

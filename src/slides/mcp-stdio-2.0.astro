@@ -1,0 +1,100 @@
+---
+import PNotes from "../components/PNotes.astro";
+---
+
+<p-slide class="cover-internal">
+  <h1>Build from scratch</h1>
+</p-slide>
+<p-slide class="cover-internal-sub-section">
+  <h2>stdio</h2>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Project setup</h3>
+  <pre class="small-line" data-label-file="package.json">
+    <code style="font-size: 0.6em" is:raw class="language-javascript">
+    {
+        "name": "stdio",
+        "type": "module",
+        "scripts": {
+            "start": "node server.js"
+        },
+        "dependencies": {
+            "@modelcontextprotocol/server": "^2.0.0",
+            "zod": "^4.0.0"
+        }
+    }</code></pre>
+  <PNotes>
+    <p>
+      The only dependencies we need are the MCP server package and Zod for
+      schema validation. We use ESM modules — "type": "module" is required.
+    </p>
+    <p>
+      SDK v2 split the old monolithic @modelcontextprotocol/sdk into separate
+      packages: server, client, and framework adapters. v1 still gets fixes, but
+      new projects should start on v2.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide follow-fragments>
+  <h3 class="cover-internal-sub-section-all">Creating the server</h3>
+  <pre class="small-line" data-label-file="server.js">
+<code style="font-size: 0.55em" is:raw class="language-javascript">
+    import { McpServer } from "@modelcontextprotocol/server";
+    import { serveStdio } from "@modelcontextprotocol/server/stdio";
+    import * as z from "zod/v4";
+
+    function createServer() {
+      const server = new McpServer({ name: "my-mcp-server", version: "1.0.0" });</code><p-fragment><code style="font-size: 0.55em" is:raw class="language-javascript">
+
+      server.registerTool(
+        "greet",
+        {
+          description: "Returns a greeting for the given name",
+          inputSchema: z.object({ name: z.string() }),
+        },
+        async ({ name }) => ({
+          content: [{ type: "text", text: `Hello, ${name}!` }],
+        })
+      );
+
+      return server;
+    }
+
+    </code><code p-fragment p-effect="highlight" style="font-size: 0.55em" is:raw class="language-javascript">serveStdio(createServer);</code></p-fragment>
+  </pre>
+  <PNotes>
+    <p>
+      We wrap the server in a factory: create an McpServer with a name and
+      version, then register a tool with registerTool — name, a config object
+      with the description and a Zod input schema, and an async handler that
+      returns the result as content.
+    </p>
+    <p>
+      serveStdio takes the factory and wires it to stdin/stdout. Remember:
+      stdout is the protocol channel, so any logging goes to stderr.
+    </p>
+  </PNotes>
+</p-slide>
+<p-slide>
+  <h3 class="cover-internal-sub-section-all">Connecting a client</h3>
+  <pre class="small-line" data-label-file="mcp.json">
+<code style="font-size: 0.6em" is:raw class="language-javascript">
+    {
+      "mcpServers": {
+        "my-stdio-mcp-server": {
+         "command": "node",
+         "args": [
+             "/path/to/server.js"
+         ]
+        }
+     }
+    }</code>
+  </pre>
+  <PNotes>
+    <p>
+      Any MCP-compatible client reads this config and spawns the server as a
+      child process automatically. No ports, no URLs — just a path and a
+      command.
+    </p>
+  </PNotes>
+</p-slide>

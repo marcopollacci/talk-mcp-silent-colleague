@@ -7,16 +7,16 @@ import Layout from "../layouts/Layout.astro";
 import CoverDfm2026 from "../slides/cover-dfm2026.astro";
 import Cover from "../slides/cover.astro";
 import Intro from "../slides/intro.astro";
-import McpArchitecture from "../slides/mcp-architecture.astro";
-import McpHttpOauth2 from "../slides/mcp-http-oauth2.astro";
-import McpHttp from "../slides/mcp-http.astro";
-import McpOutro from "../slides/mcp-outro.astro";
-import McpStdio from "../slides/mcp-stdio.astro";
-import McpStructure from "../slides/mcp-structure.astro";
-import McpTest from "../slides/mcp-test.astro";
+import McpArchitecture2 from "../slides/mcp-architecture-2.0.astro";
+import McpHttp2 from "../slides/mcp-http-2.0.astro";
+import McpHttpOauth22 from "../slides/mcp-http-oauth2-2.0.astro";
+import McpOutro2 from "../slides/mcp-outro-2.0.astro";
+import McpStdio2 from "../slides/mcp-stdio-2.0.astro";
+import McpStructure2 from "../slides/mcp-structure-2.0.astro";
+import McpTest2 from "../slides/mcp-test-2.0.astro";
 import McpUseCase from "../slides/mcp-use-case.astro";
 import McpWeb2 from "../slides/mcp-web-2.0.astro";
-import Questions from "../slides/questions.astro";
+import Questions2 from "../slides/questions-2.0.astro";
 import Repo from "../slides/repo.astro";
 import Thanks from "../slides/thanks.astro";
 const favIcon = favicon.src;
@@ -35,22 +35,22 @@ const metaData = {
     <>
       <Cover meReloaded={me2} />
       <Intro />
-      <McpStructure />
-      <McpArchitecture />
-      <McpStdio />
-      <McpHttp />
-      <McpHttpOauth2 />
-      <McpTest />
+      <McpStructure2 />
+      <McpArchitecture2 />
+      <McpStdio2 />
+      <McpHttp2 />
+      <McpHttpOauth22 />
+      <McpTest2 />
       <McpUseCase />
       <McpWeb2 />
-      <McpOutro />
+      <McpOutro2 />
       <Thanks
         {qrLinkRating}
         qrLink={qrLinkTalk}
         meReloaded={me2}
         urlLink={metaData.site}
         RepoSlide={Repo}
-        QuestionsSlide={Questions}
+        QuestionsSlide={Questions2}
       />
     </>
   )}
