@@ -191,104 +191,44 @@ import PNotes from "../components/PNotes.astro";
   </PNotes>
 </p-slide>
 
-<p-slide follow-fragments>
-  <h3 style="margin-block-end: 0.6em;">
-    <span class="cover-internal-sub-section-all">
-      Becoming an OAuth provider
-    </span>
-    🛡️
-  </h3>
-
-  <pre class="small-line" data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">  import { betterAuth } from "better-auth";
-  import { jwt } from "better-auth/plugins";
-  import { oauthProvider } from "@better-auth/oauth-provider";
-  import { cimd } from "@better-auth/cimd";
-
-  const auth = betterAuth({
-    baseURL: AUTH_BASE_URL,
-    secret: process.env.BETTER_AUTH_SECRET,
-    disabledPaths: ["/token"],
-    plugins: [
-      </code><p-fragment><code style="font-size: 0.6em" is:raw class="language-javascript">jwt({ disableSettingJwtHeader: true }),
-      oauthProvider({
-        loginPage: "/sign-in",
-        consentPage: "/consent",
-        allowDynamicClientRegistration: true,
-        allowUnauthenticatedClientRegistration: true,
-      }),
-      cimd(),
-    ],
-    socialProviders: {
-      github: {
-        clientId: process.env.GITHUB_ID,
-        clientSecret: process.env.GITHUB_SECRET,
-      },
-    },
-  });</code></p-fragment></pre>
-
-  <PNotes>
-    <p>
-      In this example, better-auth becomes the authorization server. It handles
-      login, consent, token issuance, and dynamic client registration.
-    </p>
-    <p>
-      The MCP server itself is still the protected resource. It does not need to
-      implement the whole OAuth flow manually. It only needs to advertise where
-      authorization happens and validate the access tokens it receives.
-    </p>
-    <p>
-      The cimd plugin lets clients use a Client ID Metadata Document URL as
-      their client_id — the method preferred by the current spec.
-    </p>
-    <p>
-      Dynamic client registration (with unauthenticated public clients) stays
-      enabled only for backwards compatibility with older MCP clients: DCR is
-      deprecated as of 2026-07-28.
-    </p>
-  </PNotes>
-</p-slide>
-
 <p-slide>
-  <h3 style="margin-block-end: 1em;">
-    <span class="cover-internal-sub-section-all">Verifying the token</span>
-    🎫
-  </h3>
-
-  <pre class="small-line" data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">  import { verifyBearerToken } from "better-auth/oauth2";
-
-  const verifier = {
-    async verifyAccessToken(token) {
-      const jwt = await verifyBearerToken(token, {
-        jwksUrl: `${AUTH_BASE_URL}/jwks`,
-        verifyOptions: {
-          issuer: AUTH_BASE_URL,
-          audience: MCP_RESOURCE_URL,
-        },
-      });
-
-      return {
-        token,
-        clientId: jwt.azp,
-        scopes: jwt.scope?.split(" ") ?? [],
-        expiresAt: jwt.exp,
-      };
-    },
-  };</code>
-  </pre>
+  <h3 class="cover-internal-sub-section-all">Who does what</h3>
+  <ul>
+    <li p-fragment p-effect="from left">
+      🏛️ <span class="main-sub-gradient">Authorization server</span> — login,
+      consent, issues tokens
+      <span class="item-sub">
+        your identity provider: <code>Keycloak</code> / <code>Auth0</code> /
+        <code>Clerk</code>…
+      </span>
+    </li>
+    <li p-fragment p-effect="from right">
+      🛡️ <span class="main-sub-gradient">MCP server = resource server</span> —
+      verifies tokens, never issues them
+    </li>
+    <li p-fragment p-effect="from left">
+      🧰 <span class="main-sub-gradient">MCP SDK v2</span> — ships bearer auth
+      &amp; metadata helpers
+    </li>
+  </ul>
 
   <PNotes>
     <p>
-      The MCP SDK doesn't care how tokens are validated: it asks for a verifier
-      with a single method, verifyAccessToken, that returns who the caller is.
+      This is the official position of the TypeScript SDK v2: your MCP server is
+      an OAuth resource server. It verifies access tokens that an authorization
+      server issued, and it never issues them.
     </p>
     <p>
-      Here better-auth checks signature, issuer, audience and expiry against the
-      authorization server's JWKS. The audience must be this MCP server: a token
-      issued for another resource is rejected.
+      Implementing OAuth from scratch is easy to get wrong. For login, consent
+      and token issuance use a dedicated identity provider. The v1
+      authorization-server helpers still exist, but they are frozen in the
+      server-legacy package.
     </p>
-    <p>Don't forget expiresAt: the SDK refuses tokens without it.</p>
+    <p>
+      The MCP-specific part is not "invent OAuth again". It is wiring standard
+      OAuth discovery, protected resource metadata, token validation, and the
+      MCP transport together, and that is exactly what the SDK covers.
+    </p>
   </PNotes>
 </p-slide>
 
@@ -299,89 +239,37 @@ import PNotes from "../components/PNotes.astro";
   </h3>
 
   <pre class="small-line" data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">  import {
-    requireBearerAuth,
-    mcpAuthMetadataRouter,
-    getOAuthProtectedResourceMetadataUrl,
-  } from "@modelcontextprotocol/express";
+<code style="font-size: 0.6em" is:raw class="language-javascript">  import { requireBearerAuth, mcpAuthMetadataRouter }
+    from "@modelcontextprotocol/express";
 
-  const resourceUrl = new URL(MCP_RESOURCE_URL);
+  </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">app.use(mcpAuthMetadataRouter({ oauthMetadata, resourceServerUrl }));</code><code style="font-size: 0.6em" is:raw class="language-javascript">
 
-  app.all("/api/auth/*", toNodeHandler(auth));
-  </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">app.use(mcpAuthMetadataRouter({ oauthMetadata, resourceServerUrl: resourceUrl }));</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-
-  app.all(
-    "/mcp",
-    </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">requireBearerAuth({
-      verifier,
-      resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceUrl),
-    }),</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-    (req, res) => node(req, res, req.body)
+  app.all("/mcp",
+    </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">requireBearerAuth({ verifier, resourceMetadataUrl }),</code><code style="font-size: 0.6em" is:raw class="language-javascript">
+    mcpHandler
   );</code>
   </pre>
 
-  <PNotes>
-    <p>
-      SDK v2 ships the resource-server plumbing. mcpAuthMetadataRouter publishes
-      the protected resource metadata document we saw earlier.
-    </p>
-    <p>
-      requireBearerAuth sits in front of the MCP handler: it reads the Bearer
-      token, runs our verifier, and on failure answers 401 with a
-      WWW-Authenticate header pointing to resource_metadata — or 403
-      insufficient_scope if required scopes are missing.
-    </p>
-    <p>
-      From there, the client discovers the authorization server, performs the
-      OAuth flow with PKCE, obtains an access token, and retries the MCP
-      request. Inside tool handlers the verified identity is available as
-      ctx.http.authInfo.
-    </p>
-  </PNotes>
-</p-slide>
-
-<p-slide>
-  <h3>
-    <span class="cover-internal-sub-section-all">
-      Don't build OAuth from scratch
-    </span>
-    🙏
-  </h3>
-
-  <ul>
-    <li p-fragment p-effect="zoom">
-      📦 <span class="main-sub-gradient">Pick an auth layer</span>
-      <span class="item-sub">
-        <code>@auth/core</code> / <code>better-auth</code>
-      </span>
-    </li>
-    <li p-fragment p-effect="zoom">
-      ☁️ <span class="main-sub-gradient">Or use an identity provider</span>
-      <span class="item-sub">
-        <code>Clerk</code> / <code>Auth0</code> / <code>Keycloak</code>
-      </span>
-    </li>
-    <li p-fragment p-effect="zoom">
-      🧰 MCP SDK v2 ships{" "}
-      <span class="main-sub-gradient">bearer auth &amp; metadata helpers</span>
-    </li>
-  </ul>
+  <p p-fragment p-effect="zoom" class="verifier-caption">
+    <code>verifier</code> = one function:
+    <code>token → &#123; clientId, scopes, expiresAt &#125;</code>
+    <span class="item-sub">JWKS, introspection, or ask your IdP</span>
+  </p>
 
   <PNotes>
+    <p>This is all the code: two SDK helpers.</p>
     <p>
-      Implementing OAuth from scratch is easy to get wrong. Use a library or a
-      hosted provider whenever possible.
+      The router publishes the "sign on the door": which server gives you the
+      token.
     </p>
     <p>
-      The MCP-specific part is not “invent OAuth again”. It is wiring standard
-      OAuth discovery, protected resource metadata, token validation, and the
-      MCP transport together.
+      requireBearerAuth is the bouncer: no valid token, 401 pointing to the
+      sign. Wrong permissions, 403.
     </p>
     <p>
-      The TypeScript SDK v2 covers the resource-server side (bearer middleware,
-      protected resource metadata). The authorization server — login, consent,
-      token issuance — is still a job for an auth library or an identity
-      provider.
+      The verifier is the only part you write: a function that takes a token and
+      returns who the client is, what it can do and when it expires. How is up
+      to you: JWKS, introspection, or a call to your identity provider.
     </p>
   </PNotes>
 </p-slide>
@@ -405,5 +293,11 @@ import PNotes from "../components/PNotes.astro";
       font-style: normal;
       font-size: 0.95em;
     }
+  }
+
+  .verifier-caption {
+    font-size: 0.6em;
+    margin-block-start: 1em;
+    text-align: center;
   }
 </style>
