@@ -1,0 +1,57 @@
+---
+import favicon from "../img/dfm2026_favicon.png";
+import me2 from "../img/me2.png";
+import qrLinkRating from "../img/qrcode_dfm2026_rating.png";
+import qrLinkTalk from "../img/qrcode_dfm2026_talk.png";
+import Layout from "../layouts/Layout.astro";
+import CoverDfm2026 from "../slides/cover-dfm2026.astro";
+import Cover from "../slides/cover.astro";
+import Intro from "../slides/intro.astro";
+import McpArchitecture2 from "../slides/mcp-architecture-2.0.astro";
+import McpHttp2 from "../slides/mcp-http-2.0.astro";
+import McpHttpOauth22 from "../slides/mcp-http-oauth2-2.0.astro";
+import McpOutro2 from "../slides/mcp-outro-2.0.astro";
+import McpStdio2 from "../slides/mcp-stdio-2.0.astro";
+import McpStructure2 from "../slides/mcp-structure-2.0.astro";
+import McpTest2 from "../slides/mcp-test-2.0.astro";
+import McpUseCase from "../slides/mcp-use-case.astro";
+import McpWeb2 from "../slides/mcp-web-2.0.astro";
+import Questions2 from "../slides/questions-2.0.astro";
+import Repo from "../slides/repo.astro";
+import Thanks from "../slides/thanks.astro";
+const favIcon = favicon.src;
+const canRender = import.meta.env.DEV || new Date("2026-10-04") < new Date();
+const metaData = {
+  title: "MCP: the silent colleague connecting your services to the AI",
+  description: "Talk di Marco Pollacci",
+  image: "og-image.png",
+  site: "https://talk-mcp-silent-colleague.marcotalk.dev/devfest-modena-2026/",
+};
+---
+
+<Layout {canRender} {favIcon} {metaData}>
+  <CoverDfm2026 />
+  {canRender && (
+    <>
+      <Cover meReloaded={me2} />
+      <Intro />
+      <McpStructure2 />
+      <McpArchitecture2 />
+      <McpStdio2 />
+      <McpHttp2 />
+      <McpHttpOauth22 />
+      <McpTest2 />
+      <McpUseCase />
+      <McpWeb2 />
+      <McpOutro2 />
+      <Thanks
+        {qrLinkRating}
+        qrLink={qrLinkTalk}
+        meReloaded={me2}
+        urlLink={metaData.site}
+        RepoSlide={Repo}
+        QuestionsSlide={Questions2}
+      />
+    </>
+  )}
+</Layout>

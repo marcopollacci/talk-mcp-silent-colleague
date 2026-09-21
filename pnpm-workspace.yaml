@@ -3,6 +3,4 @@ allowBuilds:
   esbuild: true
   sharp: true
 minimumReleaseAge: 720
-minimumReleaseAgeExclude:
-  - '@types/node@26.6.0'
 minimumReleaseAgeStrict: true

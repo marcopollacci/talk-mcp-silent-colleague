@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import dfm2026 from "../img/devfest-modena-logo-t.png";
+---
+
+<p-slide class="cover">
+  <h1>MCP: the silent colleague connecting your services to the AI</h1>
+  <p-note class="center">
+    <h6>Connecting LLMs to the real world, one tool at a time</h6>
+  </p-note>
+  <Image
+    src={dfm2026}
+    alt="devfest modena 2026 logo"
+    class="alter-image-size"
+    style="--image-start-size: 3em;margin-block-start: 3rem;"
+  />
+  <p-note class="center bottom-fist-page text-sub-section">
+    <span>Marco Pollacci</span>
+    <span>04/10/2026 - Modena, Italy</span>
+  </p-note>
+</p-slide>
+<style lang="scss">
+  h1 {
+    font-size: 1.2em;
+  }
+  img {
+    filter: drop-shadow(0.25em 0.25em 0.1375em rgba(0, 0, 0, 0.5));
+  }
+</style>
