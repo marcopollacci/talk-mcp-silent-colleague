@@ -20,16 +20,16 @@ import PNotes from "../components/PNotes.astro";
         "@modelcontextprotocol/server": "^2.0.0",
         "@modelcontextprotocol/express": "^2.0.0",
         "@modelcontextprotocol/node": "^2.0.0",
-        "express": "^5.0.0",
-        "zod": "^4.0.0"
+        "express": "^5.0.0"
       }
     }</code>
   </pre>
   <PNotes>
     <p>
-      Same as stdio, plus Express and two small adapters: the Express
+      The MCP server package, plus Express and two small adapters: the Express
       integration and the Node.js request handler bridge. Streamable HTTP
-      support lives in the server package itself.
+      support lives in the server package itself. No Zod here: the tools and
+      their schemas live in the createServer factory we reuse from stdio.
     </p>
   </PNotes>
 </p-slide>
