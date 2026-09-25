@@ -1,29 +1,256 @@
 ---
-import { Image } from "astro:assets";
-import dfm2026 from "../img/devfest-modena-logo-t.png";
+import PNotes from "../components/PNotes.astro";
 ---
 
-<p-slide class="cover">
-  <h1>MCP: the silent colleague connecting your services to the AI</h1>
-  <p-note class="center">
-    <h6>Connecting LLMs to the real world, one tool at a time</h6>
-  </p-note>
-  <Image
-    src={dfm2026}
-    alt="devfest modena 2026 logo"
-    class="alter-image-size"
-    style="--image-start-size: 3em;margin-block-start: 3rem;"
-  />
-  <p-note class="center bottom-fist-page text-sub-section">
-    <span>Marco Pollacci</span>
-    <span>04/10/2026 - Modena, Italy</span>
-  </p-note>
+<p-slide class="dfm-cover">
+  <div class="dfm-card">
+    <div class="dfm-notch dfm-notch--top">
+      <span class="dfm-logo" role="img" aria-label="DevFest Modena">
+        <span class="dfm-brace" aria-hidden="true">{"{"}</span>
+        <span class="dfm-logo-text" aria-hidden="true">
+          <b>DevFest</b>
+          <span class="dfm-pill">Modena</span>
+        </span>
+        <span class="dfm-brace" aria-hidden="true">{"}"}</span>
+      </span>
+    </div>
+
+    <h1>MCP: the silent colleague connecting your services to the AI</h1>
+    <p class="dfm-speaker">
+      <span>Marco Pollacci</span>
+      <span>40Factory · 04/10/2026</span>
+    </p>
+
+    <div class="dfm-notch dfm-notch--bottom">
+      <span class="gdg-mark" aria-hidden="true">
+        <i class="red"></i>
+        <i class="blue"></i>
+        <i class="green"></i>
+        <i class="yellow"></i>
+      </span>
+      <span class="gdg-text">Google<br />Developer<br />Groups</span>
+    </div>
+  </div>
+  <PNotes>
+    <p>Benvenuti al DevFest Modena 2026: presentarsi, 40Factory.</p>
+  </PNotes>
 </p-slide>
+
 <style lang="scss">
-  h1 {
-    font-size: 1.2em;
+  p-slide.dfm-cover {
+    --dfm-bg: var(--slide-surface);
+    --dfm-ink: #202124;
+    --dfm-surface: #ffffff;
+    --dfm-bw: 0.052em;
+    --dfm-r: 0.575em;
+    --dfm-notch-top-w: 7.75em;
+    --dfm-notch-top-h: 3em;
+    --dfm-notch-bottom-w: 6.25em;
+    --dfm-notch-bottom-h: 2.03em;
+
+    background-color: var(--dfm-bg);
+    color: var(--dfm-ink);
+    font-family: var(--gdg-sans);
   }
-  img {
-    filter: drop-shadow(0.25em 0.25em 0.1375em rgba(0, 0, 0, 0.5));
+
+  .dfm-card {
+    position: absolute;
+    inset: 1.04em 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: calc(var(--dfm-notch-top-h) + 1.15em) 1.25em var(--dfm-notch-bottom-h) 1.3em;
+    background: var(--dfm-surface);
+    border: var(--dfm-bw) solid var(--dfm-ink);
+    border-radius: var(--dfm-r);
+  }
+
+  /* Notches: bg-coloured boxes covering the card corners; the pseudo
+     elements draw the rounded junctions where notch and card edges meet */
+  .dfm-notch {
+    --ring: radial-gradient(
+      circle at var(--at),
+      transparent calc(var(--dfm-r) - var(--dfm-bw) - 0.5px),
+      var(--dfm-ink) calc(var(--dfm-r) - var(--dfm-bw)),
+      var(--dfm-ink) calc(var(--dfm-r) - 0.5px),
+      var(--dfm-bg) var(--dfm-r)
+    );
+    position: absolute;
+    display: flex;
+    background: var(--dfm-bg);
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      width: var(--dfm-r);
+      height: var(--dfm-r);
+      background: var(--ring);
+    }
+  }
+
+  .dfm-notch--top {
+    --at: 100% 100%;
+    top: calc(-1 * var(--dfm-bw));
+    left: calc(-1 * var(--dfm-bw));
+    width: var(--dfm-notch-top-w);
+    height: var(--dfm-notch-top-h);
+    padding: 0.12em 0 0 0.19em;
+    border-right: var(--dfm-bw) solid var(--dfm-ink);
+    border-bottom: var(--dfm-bw) solid var(--dfm-ink);
+    border-bottom-right-radius: var(--dfm-r);
+
+    &::before {
+      top: 0;
+      left: 100%;
+    }
+    &::after {
+      top: 100%;
+      left: 0;
+    }
+  }
+
+  .dfm-notch--bottom {
+    --at: 0 0;
+    bottom: calc(-1 * var(--dfm-bw));
+    right: calc(-1 * var(--dfm-bw));
+    width: var(--dfm-notch-bottom-w);
+    height: var(--dfm-notch-bottom-h);
+    align-items: center;
+    gap: 0.78em;
+    padding: 0.62em 0 0 0.94em;
+    border-left: var(--dfm-bw) solid var(--dfm-ink);
+    border-top: var(--dfm-bw) solid var(--dfm-ink);
+    border-top-left-radius: var(--dfm-r);
+
+    &::before {
+      bottom: 0;
+      right: 100%;
+    }
+    &::after {
+      bottom: 100%;
+      right: 0;
+    }
+  }
+
+  /* DevFest Modena logo */
+  .dfm-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    height: 2.1em;
+  }
+
+  .dfm-brace {
+    font-size: 2.2em;
+    font-weight: 700;
+    line-height: 1;
+    color: #f9ab00;
+    -webkit-text-stroke: 0.045em var(--dfm-ink);
+    paint-order: stroke fill;
+  }
+
+  .dfm-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.1em;
+    width: 4.53em;
+
+    b {
+      font-size: 1.16em;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-align: center;
+    }
+  }
+
+  .dfm-pill {
+    display: grid;
+    place-items: center;
+    font-size: 0.34em;
+    height: 2em;
+    font-weight: 500;
+    background: var(--dfm-surface);
+    border: calc(var(--dfm-bw) / 0.34) solid var(--dfm-ink);
+    border-radius: 999px;
+  }
+
+  /* Title & speaker */
+  h1 {
+    max-width: 15em;
+    margin: 0;
+    font-family: var(--gdg-sans);
+    font-size: 1.36em;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-align: start;
+    text-wrap: balance;
+    color: var(--dfm-ink);
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .dfm-speaker {
+    display: flex;
+    flex-direction: column;
+    margin: 0.9em 0 0;
+    font-family: var(--gdg-mono);
+    font-size: 0.54em;
+    line-height: 1.3;
+
+    span {
+      font-family: inherit;
+    }
+  }
+
+  /* Google Developer Groups logo */
+  .gdg-mark {
+    --h: 0.55em;
+    position: relative;
+    flex: none;
+    width: 2.48em;
+    height: 1.31em;
+
+    i {
+      position: absolute;
+      top: calc(50% - var(--h) / 2);
+      width: 1.22em;
+      height: var(--h);
+      border-radius: 999px;
+    }
+    .red,
+    .blue {
+      left: 0;
+      transform-origin: calc(var(--h) / 2) 50%;
+    }
+    .green,
+    .yellow {
+      right: 0;
+      transform-origin: calc(100% - var(--h) / 2) 50%;
+    }
+    .red {
+      background: #ea4335;
+      rotate: -38deg;
+    }
+    .blue {
+      background: #4285f4;
+      rotate: 38deg;
+    }
+    .green {
+      background: #34a853;
+      rotate: 38deg;
+    }
+    .yellow {
+      background: #f9ab00;
+      rotate: -38deg;
+    }
+  }
+
+  .gdg-text {
+    font-size: 0.41em;
+    line-height: 1.12;
   }
 </style>

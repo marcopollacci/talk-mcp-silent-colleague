@@ -3,20 +3,48 @@ import { Image } from "astro:assets";
 import PNotes from "../components/PNotes.astro";
 import mcp from "../img/mcp-nobg.png";
 import wtf from "../img/wtf.jpeg";
+
+interface Props {
+  /** Render the "AI app ⇄ MCP server" diagram in HTML instead of the image */
+  mcpDiagram?: boolean;
+}
+const { mcpDiagram = false } = Astro.props;
 ---
 
 <p-slide class="center" autoplay timing="550">
   <h2 style="margin-block-end: 0.2em" class="main-gradient">
-    Let's talk about MCP
+    Let's talk about <span class="accent">MCP</span>
   </h2>
-  <p-fragment
-    ><Image
-      src={mcp}
-      alt="mcp logo"
-      class="alter-image-size"
-      style="--image-start-size: 9em"
-    /></p-fragment
-  >
+  <p-fragment>
+    {
+      mcpDiagram ? (
+        <div
+          class="mcp-diagram"
+          role="img"
+          aria-label="An AI app exchanging requests with an MCP server exposing getCustomers, getOrders and launchCampaign"
+        >
+          <div class="mcp-diagram__app">AI app</div>
+          <div class="mcp-diagram__arrows" aria-hidden="true">
+            <span class="mcp-diagram__arrow" />
+            <span class="mcp-diagram__arrow mcp-diagram__arrow--back" />
+          </div>
+          <div class="mcp-diagram__server">
+            <b>MCP server</b>
+            <span class="mcp-diagram__tool">getCustomers</span>
+            <span class="mcp-diagram__tool">getOrders</span>
+            <span class="mcp-diagram__tool">launchCampaign</span>
+          </div>
+        </div>
+      ) : (
+        <Image
+          src={mcp}
+          alt="mcp logo"
+          class="alter-image-size"
+          style="--image-start-size: 9em"
+        />
+      )
+    }
+  </p-fragment>
 </p-slide>
 <p-slide>
   <ul style="line-height: 1.8em">
@@ -52,7 +80,7 @@ import wtf from "../img/wtf.jpeg";
   </PNotes>
 </p-slide>
 <p-slide class="center" autoplay timing="550">
-  <h1 class="main-gradient">Why MCP?</h1>
+  <h1 class="main-gradient">Why <span class="accent">MCP</span>?</h1>
   <p-fragment
     ><Image
       src={wtf}
@@ -99,7 +127,7 @@ import wtf from "../img/wtf.jpeg";
   </PNotes>
 </p-slide>
 <p-slide>
-  <h2 class="main-gradient">The N x M problem</h2>
+  <h2 class="main-gradient">The N x M <span class="accent">problem</span></h2>
 
   <ul style="line-height: 1.8em">
     <li>
@@ -132,7 +160,7 @@ import wtf from "../img/wtf.jpeg";
   </PNotes>
 </p-slide>
 <p-slide>
-  <h2><span class="main-gradient">The deterministic problem</span> 🔢</h2>
+  <h2><span class="main-gradient">The <span class="accent">deterministic</span> problem</span> 🔢</h2>
 </p-slide>
 <p-slide>
   <ul style="line-height: 1.8em">
@@ -177,7 +205,7 @@ import wtf from "../img/wtf.jpeg";
   </PNotes>
 </p-slide>
 <p-slide class="center">
-  <h2 class="main-gradient">The MCP solution</h2>
+  <h2 class="main-gradient">The MCP <span class="accent">solution</span></h2>
 </p-slide>
 <p-slide>
   <ul style="line-height: 1.8em">
@@ -215,3 +243,84 @@ import wtf from "../img/wtf.jpeg";
     </p>
   </PNotes>
 </p-slide>
+
+<style lang="scss">
+  .mcp-diagram {
+    --bw: 0.052em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9em;
+    margin-block-start: 0.6em;
+    color: var(--ink);
+  }
+
+  .mcp-diagram__app {
+    display: grid;
+    place-items: center;
+    font-family: var(--gdg-mono);
+    font-size: 0.55em;
+    background: var(--accent-soft);
+    border: calc(var(--bw) / 0.55) solid var(--ink);
+    border-radius: 1em;
+    inline-size: calc(5.4em / 0.55);
+    block-size: calc(5.9em / 0.55);
+  }
+
+  .mcp-diagram__arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3em;
+    inline-size: 4em;
+  }
+
+  .mcp-diagram__arrow {
+    --head: 0.4em;
+    position: relative;
+    display: block;
+    block-size: 0.1em;
+    margin-inline-end: var(--head);
+    background: var(--accent);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: 100%;
+      inset-block-start: 50%;
+      translate: 0 -50%;
+      border-block: calc(var(--head) / 2) solid transparent;
+      border-inline-start: var(--head) solid var(--accent);
+    }
+
+    &--back {
+      margin-inline: var(--head) 0;
+      scale: -1 1;
+    }
+  }
+
+  .mcp-diagram__server {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    inline-size: 8.4em;
+    padding: 0.5em 0.6em 0.6em;
+    text-align: start;
+    background: var(--surface-card);
+    border: var(--bw) solid var(--ink);
+    border-radius: 0.6em;
+
+    b {
+      font-size: 0.55em;
+      font-weight: 700;
+      margin-block-end: 0.15em;
+    }
+  }
+
+  .mcp-diagram__tool {
+    padding: 0.35em 0.6em;
+    font-family: var(--gdg-mono);
+    font-size: 0.45em;
+    background: var(--accent-soft);
+    border-radius: 0.6em;
+  }
+</style>

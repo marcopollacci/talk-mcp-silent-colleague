@@ -15,7 +15,7 @@ const { qrLink, urlLink, qrLinkRating, QuestionsSlide, meReloaded, RepoSlide } =
   />
 </p-slide>
 <p-slide class="center">
-  <h2 style="margin-block-end: 0.3em">You can see this slide on</h2>
+  <h2 style="margin-block-end: 0.3em">You can see <span class="accent">this slide</span> on</h2>
   {
     !qrLink ? (
       <p-note class="to-do" style="margin-block-end: 0.5em">
@@ -64,7 +64,7 @@ const { qrLink, urlLink, qrLinkRating, QuestionsSlide, meReloaded, RepoSlide } =
     </div>
   </p-note>
   <p-note class="text-cover my-data my-presentation">
-    <h5>Leave some feedback</h5>
+    <h5>Leave some <span class="accent">feedback</span></h5>
     {
       !qrLinkRating ? (
         <span class="to-do">adding qr image!</span>

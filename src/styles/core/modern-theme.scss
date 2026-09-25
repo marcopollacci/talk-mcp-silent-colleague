@@ -4,31 +4,41 @@
 
 html:not([data-theme="classic"]) {
   // Tokens -------------------------------------------------------------
-  --ink: oklch(0.24 0.02 250);
-  --ink-mute: oklch(0.56 0.02 250);
+  // "Giallo DevFest" palette: GDG ink on a warm off-white surface, with the
+  // DevFest brace yellow as the only accent.
+  --ink: #202124;
+  --ink-mute: #5f6368;
 
-  --slide-surface: oklch(0.983 0.005 240);
-  --surface-card: oklch(0.965 0.008 240);
-  --surface-border: oklch(0.88 0.012 240);
-  --shadow-color: oklch(0.4 0.03 250 / 12%);
+  --slide-surface: #f1f0ee;
+  --surface-card: #ffffff;
+  --surface-border: #dcdad5;
+  --shadow-color: rgb(32 33 36 / 10%);
 
   --radius-sm: 0.4em;
   --radius-md: 0.9em;
 
-  // Cool blue → teal accent family: same hue swing as the main pair, just
-  // lighter, so the sweep still reads on short text instead of flattening
-  // into a single flat color.
-  --accent: oklch(0.58 0.15 240);
-  --accent-soft: oklch(0.6 0.12 195);
-  --accent-sub-a: oklch(0.64 0.13 225);
-  --accent-sub-b: oklch(0.68 0.11 175);
+  // --accent: fills (bullets, arrows, borders); --accent-ink: the same
+  // yellow darkened enough to be readable as text on the surface.
+  --accent: #f9ab00;
+  --accent-ink: #bc8028;
+  --accent-soft: #fdf0cc;
+  // Body highlights sweep ink → grey (also tints the QR code in cover.astro).
+  --accent-sub-a: var(--ink);
+  --accent-sub-b: var(--ink-mute);
 
   // Re-route the shared brand/gradient tokens the whole deck already reads
-  // through var() — this alone removes the pink from every .main-gradient
-  // and .current-gradient heading, deck-wide, without touching shared files.
-  --brand-color: var(--accent);
-  --starting-point-gradient: var(--accent);
-  --ending-point-gradient: var(--accent-soft);
+  // through var(): headings become solid ink. --brand-color is also used as a
+  // text colour (links), so it takes the readable yellow.
+  --brand-color: var(--accent-ink);
+  --starting-point-gradient: var(--ink);
+  --ending-point-gradient: var(--ink);
+
+  // Google Sans everywhere: the Graphik variables are what every shared
+  // rule reads, so pointing them at Google Sans swaps the whole deck.
+  --talk-marco-graphik-regular: var(--gdg-sans);
+  --talk-marco-graphik-medium: var(--gdg-sans);
+  --talk-marco-graphik-semibold: var(--gdg-sans);
+  font-family: var(--gdg-sans);
 
   color: var(--ink);
 
@@ -68,10 +78,48 @@ html:not([data-theme="classic"]) {
     background-color: var(--slide-surface);
   }
 
+  // Typography ---------------------------------------------------------
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .main-gradient,
+  .current-gradient {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .main-sub-gradient,
+  .text-sub-section,
+  .text-cover {
+    font-weight: 600;
+  }
+
+  // Opt-in keyword highlight inside headings / text.
+  .accent {
+    color: var(--accent-ink);
+    -webkit-text-fill-color: currentColor;
+  }
+
   // Lists ------------------------------------------------------------
   li {
     line-height: 1.5;
     margin-block-end: 0.35em;
+  }
+
+  // Top-level slide lists only: nested lists (cards, tables) keep their own markers.
+  p-slide > ul > li::before,
+  p-slide > ul > p-fragment > li::before {
+    content: "";
+    display: inline-block;
+    inline-size: 0.42em;
+    block-size: 0.42em;
+    margin-inline-end: 0.5em;
+    vertical-align: 0.12em;
+    border-radius: 0.1em;
+    background: var(--accent);
   }
 
   // Div components -----------------------------------------------------
@@ -88,7 +136,7 @@ html:not([data-theme="classic"]) {
 
       &:before,
       &:after {
-        color: var(--accent-soft);
+        color: var(--accent);
       }
     }
 

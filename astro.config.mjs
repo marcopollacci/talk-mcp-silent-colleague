@@ -46,6 +46,24 @@ export default defineConfig({
         ],
       },
     },
+    {
+      provider: fontProviders.google(),
+      name: "Google Sans Flex",
+      cssVariable: "--gdg-sans",
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["sans-serif"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Google Sans Code",
+      cssVariable: "--gdg-mono",
+      weights: [400],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: ["monospace"],
+    },
   ],
   vite: {
     build: {

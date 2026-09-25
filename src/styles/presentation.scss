@@ -292,7 +292,7 @@ pre {
   align-items: center;
   gap: 1.5vw;
 
-  span {
+  span:not(.accent) {
     line-height: 1.1rem;
     font-size: 2vw;
   }

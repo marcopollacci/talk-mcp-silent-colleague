@@ -14,6 +14,8 @@ const fontsToPreload = [
   "--talk-marco-graphik-regular",
   "--talk-marco-graphik-medium",
 ] as const;
+const themeFontsToPreload =
+  theme === "classic" ? [] : (["--gdg-sans", "--gdg-mono"] as const);
 ---
 
 <!doctype html>
@@ -24,6 +26,11 @@ const fontsToPreload = [
     <Seo {...metaData} />
     <link rel="icon" type="image/svg+xml" href={favIcon} />
     {fontsToPreload.map((cssVariable) => <Font cssVariable={cssVariable} />)}
+    {
+      themeFontsToPreload.map((cssVariable) => (
+        <Font cssVariable={cssVariable} preload />
+      ))
+    }
     <link href="/css/prism-one-light.css" rel="stylesheet" />
     <title>{metaData.title}</title>
   </head>
