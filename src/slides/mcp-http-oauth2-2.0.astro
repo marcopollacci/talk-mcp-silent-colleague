@@ -10,7 +10,10 @@ import PNotes from "../components/PNotes.astro";
     your MCP server is on the internet now...
   </h3>
   <h2 p-effect="zoom fade" style="font-size: 1.5em;">
-    <span class="main-gradient">who's <span class="accent">allowed</span> to call it?</span> 🤔
+    <span class="main-gradient">
+      who's <span class="accent">allowed</span> to call it?
+    </span>{" "}
+    🤔
   </h2>
   <p
     p-effect="zoom fade"
@@ -50,7 +53,9 @@ import PNotes from "../components/PNotes.astro";
 </p-slide>
 
 <p-slide>
-  <h3 class="cover-internal-sub-section-all">The <span class="accent">OAuth flow</span> in MCP</h3>
+  <h3 class="cover-internal-sub-section-all">
+    The <span class="accent">OAuth flow</span> in MCP
+  </h3>
   <ul style="font-size: 0.8em">
     <li p-fragment p-effect="from left">
       🚪 <span class="main-sub-gradient">1. Unauthorized request</span> — client
@@ -228,48 +233,6 @@ import PNotes from "../components/PNotes.astro";
       The MCP-specific part is not "invent OAuth again". It is wiring standard
       OAuth discovery, protected resource metadata, token validation, and the
       MCP transport together, and that is exactly what the SDK covers.
-    </p>
-  </PNotes>
-</p-slide>
-
-<p-slide follow-fragments>
-  <h3 style="margin-block-end: 1em;">
-    <span class="cover-internal-sub-section-all"><span class="accent">Protecting</span> the endpoint</span>
-    🔒
-  </h3>
-
-  <pre class="small-line" data-label-file="server.js">
-<code style="font-size: 0.6em" is:raw class="language-javascript">  import { requireBearerAuth, mcpAuthMetadataRouter }
-    from "@modelcontextprotocol/express";
-
-  </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">app.use(mcpAuthMetadataRouter({ oauthMetadata, resourceServerUrl }));</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-
-  app.all("/mcp",
-    </code><code p-fragment p-effect="highlight" style="font-size: 0.6em" is:raw class="language-javascript">requireBearerAuth({ verifier, resourceMetadataUrl }),</code><code style="font-size: 0.6em" is:raw class="language-javascript">
-    mcpHandler
-  );</code>
-  </pre>
-
-  <p p-fragment p-effect="zoom" class="verifier-caption">
-    <code>verifier</code> = one function:
-    <code>token → &#123; clientId, scopes, expiresAt &#125;</code>
-    <span class="item-sub">JWKS, introspection, or ask your IdP</span>
-  </p>
-
-  <PNotes>
-    <p>This is all the code: two SDK helpers.</p>
-    <p>
-      The router publishes the "sign on the door": which server gives you the
-      token.
-    </p>
-    <p>
-      requireBearerAuth is the bouncer: no valid token, 401 pointing to the
-      sign. Wrong permissions, 403.
-    </p>
-    <p>
-      The verifier is the only part you write: a function that takes a token and
-      returns who the client is, what it can do and when it expires. How is up
-      to you: JWKS, introspection, or a call to your identity provider.
     </p>
   </PNotes>
 </p-slide>
