@@ -21,7 +21,7 @@
     "husky": "^9.1.7",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
-    "sass": "^1.105.1",
+    "sass": "^1.105.2",
     "sharp": "^0.35.5",
     "vite-plugin-static-copy": "^4.1.1"
   }
